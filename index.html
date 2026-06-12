@@ -16,8 +16,10 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--nv:#0D2B4E;--ac:#2E87D4;--bg:#f0f4f8;--cd:#fff;--tx:#0D2B4E;--mu:#5a7a99;--bd:#d0dde8;--ok:#15803d;--okb:#dcfce7;--er:#dc2626;--erb:#fee2e2;--wn:#d97706;--wnb:#fef3c7;--r:12px;--th:48px}
 html{height:-webkit-fill-available}
-body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;color:var(--tx);font-size:14px;background:var(--bg);min-height:100vh;min-height:-webkit-fill-available;display:flex;flex-direction:column;overflow:hidden}
-.scr{display:none;flex-direction:column;flex:1;min-height:0}.scr.on{display:flex}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;color:var(--tx);font-size:14px;background:var(--bg);min-height:100vh;min-height:-webkit-fill-available;display:block;overflow:hidden;position:relative}
+.scr{display:none !important;flex-direction:column;flex:1;min-height:0;position:relative;z-index:1}
+.scr.on{display:flex !important;position:relative;z-index:1}
+#sApp.scr.on{position:relative}
 #sLoad{background:var(--nv);align-items:center;justify-content:center}
 .spin{width:44px;height:44px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;margin-bottom:14px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -587,19 +589,28 @@ function applyRoles() {
 function setSdot(s) { var d = document.getElementById('sdot'); if (!d) return; d.className = 'sdot'; if (s === 'sy') d.classList.add('sy'); if (s === 'se') d.classList.add('se'); }
 
 function showScr(id) {
+  // Tüm ekranları gizle
   var all = document.querySelectorAll('.scr');
   for (var i = 0; i < all.length; i++) {
     all[i].classList.remove('on');
-    all[i].style.display = 'none';
-    all[i].style.zIndex = '';
-    all[i].style.position = '';
+    all[i].style.cssText = 'display:none !important';
   }
+  // Sadece istenen ekranı göster
   var el = document.getElementById(id);
   if (el) {
-    el.style.display = 'flex';
-    el.style.position = 'relative';
-    el.style.zIndex = '1';
+    el.style.cssText = '';
     el.classList.add('on');
+    // App ekranı özel stil
+    if (id === 'sApp') {
+      el.style.display = 'flex';
+      el.style.flexDirection = 'column';
+      el.style.height = '100vh';
+      el.style.overflow = 'hidden';
+    } else {
+      el.style.display = 'flex';
+      el.style.flexDirection = 'column';
+      el.style.minHeight = '100vh';
+    }
   }
 }
 
