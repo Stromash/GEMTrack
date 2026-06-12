@@ -163,7 +163,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 </div>
 
 <!-- APP -->
-<div id="sApp" class="scr on">
+<div id="sApp" class="scr">
   <div class="sbo" id="sbo" onclick="closeSB()"></div>
   <div class="hdr">
     <button class="hmenu" onclick="openSB()"><i class="ti ti-menu-2"></i></button>
@@ -1144,24 +1144,27 @@ function delMrk(id) { if (!confirm('Markayı silmek istediğinizden emin misiniz
 // ═══════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) { window.addEventListener('load', function() { navigator.serviceWorker.register('./sw.js').catch(function() {}); }); }
 document.getElementById('lP').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
-// Firebase config direkt tanımlı
 var FIREBASE_CONFIG = {
   apiKey: 'AIzaSyDvqAAaNLp7vwQ7URbUSVSTzfEDFxB1mAU',
   authDomain: 'gemtrack-fcabe.firebaseapp.com',
   databaseURL: 'https://gemtrack-fcabe-default-rtdb.firebaseio.com',
   projectId: 'gemtrack-fcabe'
 };
-try { localStorage.setItem(CK, JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
-// Direkt uygulamaya gir - login yok
-cu = {id:'a1', adSoyad:'Kullanıcı', kullaniciAdi:'admin', rol:'admin', aktif:true};
-document.getElementById('sbAv').textContent = 'GE';
-document.getElementById('sbAv').style.background = '#2E87D4';
-document.getElementById('sbName').textContent = 'GEMTrack';
-document.getElementById('sbRole').textContent = 'Yönetici';
-showScr('sApp');
-applyRoles();
-nav('dash');
-initFB(FIREBASE_CONFIG);
+
+window.addEventListener('DOMContentLoaded', function() {
+  cu = {id:'a1', adSoyad:'GEMTrack', kullaniciAdi:'admin', rol:'admin', aktif:true};
+  var av = document.getElementById('sbAv');
+  if(av){ av.textContent='GE'; av.style.background='#2E87D4'; }
+  var nm = document.getElementById('sbName');
+  if(nm) nm.textContent='GEMTrack';
+  var rl = document.getElementById('sbRole');
+  if(rl) rl.textContent='Yönetici';
+  applyRoles();
+  showScr('sApp');
+  nav('dash');
+  try { localStorage.setItem(CK, JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
+  initFB(FIREBASE_CONFIG);
+});
 </script>
 </body>
 </html>
