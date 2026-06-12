@@ -139,32 +139,8 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 <!-- LOADING -->
 <div id="sLoad" class="scr"><div class="spin"></div><div style="color:rgba(255,255,255,.7);font-size:14px">GEMTrack yükleniyor...</div></div>
 
-<!-- CONFIG -->
-<div id="sCfg" class="scr">
-  <div class="lcard">
-    <div style="text-align:center;margin-bottom:18px">
-      <div class="logo-i"><img src="icons/icon-192x192.png"></div>
-      <div class="logo-t">GEMTrack</div>
-      <div class="logo-s">Firebase Kurulum</div>
-    </div>
-    <div class="cstep"><span class="cnum">1</span><div><a href="https://console.firebase.google.com" target="_blank" style="color:var(--ac);font-weight:600">console.firebase.google.com</a> → Google ile giriş</div></div>
-    <div class="cstep"><span class="cnum">2</span><div><strong>Add project</strong> → gemtrack → Create</div></div>
-    <div class="cstep"><span class="cnum">3</span><div><strong>Realtime Database</strong> → Create → <strong>Test mode</strong></div></div>
-    <div class="cstep"><span class="cnum">4</span><div>⚙️ Project Settings → Your apps → &lt;/&gt; Web → Register</div></div>
-    <div class="cstep"><span class="cnum">5</span><div>firebaseConfig bilgilerini girin</div></div>
-    <div style="margin-top:14px">
-      <div class="fg"><label class="fl">API Key <span class="req">*</span></label><input class="fc" id="cfg_ak" placeholder="AIzaSy..."></div>
-      <div class="fg"><label class="fl">Auth Domain <span class="req">*</span></label><input class="fc" id="cfg_ad" placeholder="project.firebaseapp.com"></div>
-      <div class="fg"><label class="fl">Database URL <span class="req">*</span></label><input class="fc" id="cfg_du" placeholder="https://project-rtdb.firebaseio.com"></div>
-      <div class="fg"><label class="fl">Project ID <span class="req">*</span></label><input class="fc" id="cfg_pi" placeholder="project-xxxxx"></div>
-    </div>
-    <div id="cfgErr" class="ebox"><i class="ti ti-x"></i><span id="cfgMsg">Hata</span></div>
-    <button class="btn btp btf" onclick="saveCfg()"><i class="ti ti-database"></i> Bağlan & Kaydet</button>
-  </div>
-</div>
-
 <!-- LOGIN -->
-<div id="sLogin" class="scr">
+<div id="sLogin" class="scr on">
   <div class="lcard">
     <div style="text-align:center;margin-bottom:20px">
       <div class="logo-i"><img src="icons/icon-192x192.png"></div>
@@ -175,7 +151,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="fg"><label class="fl">Kullanıcı Adı</label><input class="fc" id="lU" placeholder="kullanici.adi" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false"></div>
     <div class="fg"><label class="fl">Şifre</label><input class="fc" type="password" id="lP" placeholder="••••••" autocomplete="current-password"></div>
     <button class="btn btp btf" onclick="doLogin()"><i class="ti ti-login"></i> Giriş Yap</button>
-    <button class="btn bto btf" style="margin-top:8px;font-size:12px" onclick="resetCfg()"><i class="ti ti-settings"></i> Firebase Ayarları</button>
+    
     <div style="margin-top:12px;background:#f8fafc;border-radius:10px;padding:10px 13px;font-size:12px;color:var(--mu)">
       <strong>Varsayılan Admin:</strong> <code>admin</code> / <code>admin123</code>
     </div>
@@ -611,8 +587,20 @@ function applyRoles() {
 function setSdot(s) { var d = document.getElementById('sdot'); if (!d) return; d.className = 'sdot'; if (s === 'sy') d.classList.add('sy'); if (s === 'se') d.classList.add('se'); }
 
 function showScr(id) {
-  document.querySelectorAll('.scr').forEach(function(s) { s.classList.remove('on'); s.style.display = 'none'; });
-  var el = document.getElementById(id); el.style.display = 'flex'; el.classList.add('on');
+  var all = document.querySelectorAll('.scr');
+  for (var i = 0; i < all.length; i++) {
+    all[i].classList.remove('on');
+    all[i].style.display = 'none';
+    all[i].style.zIndex = '';
+    all[i].style.position = '';
+  }
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'flex';
+    el.style.position = 'relative';
+    el.style.zIndex = '1';
+    el.classList.add('on');
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -634,7 +622,7 @@ function saveCfg() {
 function resetCfg() { try { localStorage.removeItem(CK); } catch (e) {} showScr('sCfg'); }
 
 function initFB(cfg) {
-  showScr('sLoad');
+  // sLoad gösterme, login ekranında kal
   try { if (firebase.apps.length) firebase.apps[0].delete(); } catch (e) {}
   try {
     firebase.initializeApp(cfg); fdb = firebase.database();
@@ -677,8 +665,8 @@ function initData() {
       });
       fdb.ref('users').set(o4);
     }
-    startListeners(); showScr('sLogin');
-  }, function() { startListeners(); showScr('sLogin'); });
+    startListeners(); /* login ekranında kal */
+  }, function() { startListeners(); /* login ekranında kal */ });
 }
 
 function startListeners() {
@@ -1157,7 +1145,7 @@ function delMrk(id) { if (!confirm('Markayı silmek istediğinizden emin misiniz
 // ═══════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) { window.addEventListener('load', function() { navigator.serviceWorker.register('./sw.js').catch(function() {}); }); }
 document.getElementById('lP').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
-// Firebase config direkt tanımlı - config ekranı atlanır
+// Firebase config direkt tanımlı
 var FIREBASE_CONFIG = {
   apiKey: 'AIzaSyDvqAAaNLp7vwQ7URbUSVSTzfEDFxB1mAU',
   authDomain: 'gemtrack-fcabe.firebaseapp.com',
@@ -1165,6 +1153,8 @@ var FIREBASE_CONFIG = {
   projectId: 'gemtrack-fcabe'
 };
 try { localStorage.setItem(CK, JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
+// Önce login ekranını göster, arka planda Firebase'e bağlan
+showScr('sLogin');
 initFB(FIREBASE_CONFIG);
 </script>
 </body>
