@@ -1,0 +1,39 @@
+{
+  "name": "GEMTrack - Depo Yönetim Sistemi",
+  "short_name": "GEMTrack",
+  "description": "Profesyonel depo stok takip ve yönetim uygulaması",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D2B4E",
+  "theme_color": "#0D2B4E",
+  "lang": "tr",
+  "scope": "./",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Stok Girişi",
+      "short_name": "Giriş",
+      "description": "Hızlı stok girişi yap",
+      "url": "./index.html#giris",
+      "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Stok Çıkışı",
+      "short_name": "Çıkış",
+      "description": "Hızlı stok çıkışı yap",
+      "url": "./index.html#cikis",
+      "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}
