@@ -140,7 +140,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 <div id="sLoad" class="scr"><div class="spin"></div><div style="color:rgba(255,255,255,.7);font-size:14px">GEMTrack yükleniyor...</div></div>
 
 <!-- CONFIG -->
-<div id="sCfg" class="scr on">
+<div id="sCfg" class="scr">
   <div class="lcard">
     <div style="text-align:center;margin-bottom:18px">
       <div class="logo-i"><img src="icons/icon-192x192.png"></div>
@@ -1157,27 +1157,15 @@ function delMrk(id) { if (!confirm('Markayı silmek istediğinizden emin misiniz
 // ═══════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) { window.addEventListener('load', function() { navigator.serviceWorker.register('./sw.js').catch(function() {}); }); }
 document.getElementById('lP').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
-// Sayfa açılışında her zaman config ekranını göster
-// Config kayıtlıysa alanları doldur ve bağlan
-var sc = loadCfg();
-if (sc && sc.apiKey && sc.databaseURL) {
-  // Config var, alanları doldur
-  document.getElementById('cfg_ak').value = sc.apiKey || '';
-  document.getElementById('cfg_ad').value = sc.authDomain || '';
-  document.getElementById('cfg_du').value = sc.databaseURL || '';
-  document.getElementById('cfg_pi').value = sc.projectId || '';
-  // Otomatik bağlan butonu göster
-  var autoBtn = document.createElement('button');
-  autoBtn.className = 'btn bts btf';
-  autoBtn.style.marginTop = '8px';
-  autoBtn.innerHTML = '<i class="ti ti-bolt"></i> Kayıtlı Config ile Bağlan';
-  autoBtn.onclick = function() { saveCfg(); };
-  var cfgForm = document.getElementById('cfgErr');
-  if (cfgForm) cfgForm.parentNode.insertBefore(autoBtn, cfgForm);
-  showScr('sCfg');
-} else {
-  showScr('sCfg');
-}
+// Firebase config direkt tanımlı - config ekranı atlanır
+var FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyDvqAAaNLp7vwQ7URbUSVSTzfEDFxB1mAU',
+  authDomain: 'gemtrack-fcabe.firebaseapp.com',
+  databaseURL: 'https://gemtrack-fcabe-default-rtdb.firebaseio.com',
+  projectId: 'gemtrack-fcabe'
+};
+try { localStorage.setItem(CK, JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
+initFB(FIREBASE_CONFIG);
 </script>
 </body>
 </html>
