@@ -1056,47 +1056,59 @@ async function initUsers(){
 }
 
 async function doLogin(){
-  var kadi = document.getElementById('loginKadi').value.trim();
+  var kadi = document.getElementById('loginKadi').value.trim().toLowerCase();
   var sifre = document.getElementById('loginSifre').value;
-  var eEl=document.getElementById('loginErr'); var eMsg=document.getElementById('loginErrMsg');
-  function showErr(m){ eMsg.textContent=m; eEl.style.display='flex'; }
-  eEl.style.display='none';
-  if(!kadi||!sifre){ showErr('Kullanıcı adı ve şifre giriniz!'); return; }
+  var eEl = document.getElementById('loginErr');
+  var eMsg = document.getElementById('loginErrMsg');
+  function showErr(m){ eMsg.textContent = m; eEl.style.display = 'flex'; }
+  eEl.style.display = 'none';
 
-  // Giriş butonu devre dışı
+  if(!kadi || !sifre){ showErr('Kullanıcı adı ve şifre giriniz!'); return; }
+
   var btn = document.querySelector('#loginScreen button');
-  if(btn){ btn.disabled=true; btn.textContent='Kontrol ediliyor...'; }
+  if(btn){ btn.disabled = true; btn.textContent = 'Kontrol ediliyor...'; }
 
   try {
-    // Firestore users koleksiyonundan sorgula
-    const q = query(
-      collection(db, 'users'),
-      where('kullaniciAdi', '==', kadi),
-      where('sifre', '==', sifre),
-      where('aktif', '==', true)
-    );
+    // 1. Adıma: kullaniciAdi ile kullanıcıyı bul
+    const q = query(collection(db, 'users'), where('kullaniciAdi', '==', kadi));
     const snap = await getDocs(q);
 
     if(snap.empty){
-      showErr('Kullanıcı adı veya şifre hatalı');
-      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+      showErr('Kullanıcı bulunamadı');
+      if(btn){ btn.disabled = false; btn.innerHTML = '<i class="ti ti-login"></i> Giriş Yap'; }
       return;
     }
 
-    // Kullanıcı bulundu
     var userData = snap.docs[0].data();
     userData.id = snap.docs[0].id;
-    cu = userData;
 
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('app').style.display='flex';
+    // 2. Adım: Aktif mi kontrol et
+    if(!userData.aktif){
+      showErr('Kullanıcı pasif. Yönetici ile iletişime geçin.');
+      if(btn){ btn.disabled = false; btn.innerHTML = '<i class="ti ti-login"></i> Giriş Yap'; }
+      return;
+    }
+
+    // 3. Adım: Şifre kontrolü
+    if(userData.sifre !== sifre){
+      showErr('Şifre hatalı');
+      if(btn){ btn.disabled = false; btn.innerHTML = '<i class="ti ti-login"></i> Giriş Yap'; }
+      return;
+    }
+
+    // Giriş başarılı
+    cu = userData;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
     applyRoleUI();
     await startApp();
-    toast('Hoş geldiniz, '+cu.adSoyad+'!');
-  } catch(e) {
+    toast('Hoş geldiniz, ' + cu.adSoyad + '!');
+    if(btn){ btn.disabled = false; btn.innerHTML = '<i class="ti ti-login"></i> Giriş Yap'; }
+
+  } catch(e){
     console.error('Login hata:', e);
-    showErr('Bağlantı hatası. Lütfen tekrar deneyin.');
-    if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+    showErr('Firestore bağlantı hatası. Lütfen tekrar deneyin.');
+    if(btn){ btn.disabled = false; btn.innerHTML = '<i class="ti ti-login"></i> Giriş Yap'; }
   }
 }
 
