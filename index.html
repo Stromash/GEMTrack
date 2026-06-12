@@ -144,7 +144,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 <div id="sLoad" class="scr"><div class="spin"></div><div style="color:rgba(255,255,255,.7);font-size:14px">GEMTrack yükleniyor...</div></div>
 
 <!-- LOGIN -->
-<div id="sLogin" class="scr on">
+<div id="sLogin" class="scr">
   <div class="lcard">
     <div style="text-align:center;margin-bottom:20px">
       <div class="logo-i"><img src="icons/icon-192x192.png"></div>
@@ -163,7 +163,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 </div>
 
 <!-- APP -->
-<div id="sApp" class="scr">
+<div id="sApp" class="scr on">
   <div class="sbo" id="sbo" onclick="closeSB()"></div>
   <div class="hdr">
     <button class="hmenu" onclick="openSB()"><i class="ti ti-menu-2"></i></button>
@@ -1152,8 +1152,15 @@ var FIREBASE_CONFIG = {
   projectId: 'gemtrack-fcabe'
 };
 try { localStorage.setItem(CK, JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
-// Önce login ekranını göster, arka planda Firebase'e bağlan
-showScr('sLogin');
+// Direkt uygulamaya gir - login yok
+cu = {id:'a1', adSoyad:'Kullanıcı', kullaniciAdi:'admin', rol:'admin', aktif:true};
+document.getElementById('sbAv').textContent = 'GE';
+document.getElementById('sbAv').style.background = '#2E87D4';
+document.getElementById('sbName').textContent = 'GEMTrack';
+document.getElementById('sbRole').textContent = 'Yönetici';
+showScr('sApp');
+applyRoles();
+nav('dash');
 initFB(FIREBASE_CONFIG);
 </script>
 </body>
