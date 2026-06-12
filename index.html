@@ -367,17 +367,14 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="mhdr"><div class="mttl"><i class="ti ti-arrow-bar-to-down" style="color:#16a34a"></i> Stok Girişi</div><button class="mcls" onclick="closeM('mGiris')"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="fg"><label class="fl">Tarih <span class="req">*</span></label><input class="fc" type="date" id="g_tar"></div>
-      <div class="fg"><label class="fl">Kategori <span class="req">*</span></label><select class="fc" id="g_kat" onchange="onKat('g')"><option value="">Seçin...</option></select></div>
-      <div id="g_ibox" style="display:none">
-        <div class="ibox">
-          <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Detayı</div>
-          <div class="isec"><div class="isec-l">Marka</div><div class="ipills" id="g_mp"></div></div>
-          <div class="isec"><div class="isec-l">Ürün Tipi</div><div class="ipills" id="g_cp"></div></div>
-          <div class="isec"><div class="isec-l">Uzunluk</div><div class="ipills" id="g_lp"></div></div>
-          <div class="iprev" id="g_iprev"><i class="ti ti-check"></i><span id="g_itext">-</span></div>
-        </div>
+      <input type="hidden" id="g_kat">
+      <div class="ibox">
+        <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Ürünü Seç</div>
+        <div class="isec"><div class="isec-l">1. Marka Seç</div><div class="ipills" id="g_mp"></div></div>
+        <div class="isec"><div class="isec-l">2. Ürün Tipi Seç</div><div class="ipills" id="g_cp"></div></div>
+        <div class="isec"><div class="isec-l">3. Uzunluk Seç</div><div class="ipills" id="g_lp"></div></div>
+        <div class="iprev" id="g_iprev"><i class="ti ti-check"></i><span id="g_itext">-</span></div>
       </div>
-      <div class="fg" id="g_mgrp" style="display:none"><label class="fl" id="g_mlbl">Marka</label><select class="fc" id="g_mar"><option value="">Seçin...</option></select></div>
       <div class="fg"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="g_mik" min="1" placeholder="0" inputmode="numeric"></div>
       <div class="fg"><label class="fl">Personel <span class="req">*</span></label><select class="fc" id="g_per"><option value="">Seçin...</option></select></div>
       <div class="fg"><label class="fl">Açıklama (Şantiye/Proje) <span class="req">*</span></label><textarea class="fc" id="g_ac" rows="2" placeholder="Örn: Çatalağzı Termik Santrali"></textarea></div>
@@ -393,17 +390,14 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="mhdr"><div class="mttl"><i class="ti ti-arrow-bar-from-down" style="color:var(--err)"></i> Stok Çıkışı</div><button class="mcls" onclick="closeM('mCikis')"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="fg"><label class="fl">Tarih <span class="req">*</span></label><input class="fc" type="date" id="c_tar"></div>
-      <div class="fg"><label class="fl">Kategori <span class="req">*</span></label><select class="fc" id="c_kat" onchange="onKat('c')"><option value="">Seçin...</option></select></div>
-      <div id="c_ibox" style="display:none">
-        <div class="ibox">
-          <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Detayı</div>
-          <div class="isec"><div class="isec-l">Marka</div><div class="ipills" id="c_mp"></div></div>
-          <div class="isec"><div class="isec-l">Ürün Tipi</div><div class="ipills" id="c_cp"></div></div>
-          <div class="isec"><div class="isec-l">Uzunluk</div><div class="ipills" id="c_lp"></div></div>
-          <div class="iprev" id="c_iprev"><i class="ti ti-check"></i><span id="c_itext">-</span></div>
-        </div>
+      <input type="hidden" id="c_kat">
+      <div class="ibox">
+        <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Ürünü Seç</div>
+        <div class="isec"><div class="isec-l">1. Marka Seç</div><div class="ipills" id="c_mp"></div></div>
+        <div class="isec"><div class="isec-l">2. Ürün Tipi Seç</div><div class="ipills" id="c_cp"></div></div>
+        <div class="isec"><div class="isec-l">3. Uzunluk Seç</div><div class="ipills" id="c_lp"></div></div>
+        <div class="iprev" id="c_iprev"><i class="ti ti-check"></i><span id="c_itext">-</span></div>
       </div>
-      <div class="fg" id="c_mgrp" style="display:none"><label class="fl" id="c_mlbl">Marka</label><select class="fc" id="c_mar"><option value="">Seçin...</option></select></div>
       <div class="fg"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="c_mik" min="1" placeholder="0" inputmode="numeric"></div>
       <div class="fg"><label class="fl">Teslim Alan</label><input class="fc" id="c_tel" placeholder="Ad Soyad"></div>
       <div class="fg"><label class="fl">Personel <span class="req">*</span></label><select class="fc" id="c_per"><option value="">Seçin...</option></select></div>
@@ -420,17 +414,14 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="mhdr"><div class="mttl"><i class="ti ti-arrow-back-up" style="color:#7c3aed"></i> İade Al</div><button class="mcls" onclick="closeM('mIade')"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="fg"><label class="fl">Tarih <span class="req">*</span></label><input class="fc" type="date" id="i_tar"></div>
-      <div class="fg"><label class="fl">Kategori <span class="req">*</span></label><select class="fc" id="i_kat" onchange="onKat('i')"><option value="">Seçin...</option></select></div>
-      <div id="i_ibox" style="display:none">
-        <div class="ibox">
-          <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Detayı</div>
-          <div class="isec"><div class="isec-l">Marka</div><div class="ipills" id="i_mp"></div></div>
-          <div class="isec"><div class="isec-l">Ürün Tipi</div><div class="ipills" id="i_cp"></div></div>
-          <div class="isec"><div class="isec-l">Uzunluk</div><div class="ipills" id="i_lp"></div></div>
-          <div class="iprev" id="i_iprev"><i class="ti ti-check"></i><span id="i_itext">-</span></div>
-        </div>
+      <input type="hidden" id="i_kat">
+      <div class="ibox">
+        <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Ürünü Seç</div>
+        <div class="isec"><div class="isec-l">1. Marka Seç</div><div class="ipills" id="i_mp"></div></div>
+        <div class="isec"><div class="isec-l">2. Ürün Tipi Seç</div><div class="ipills" id="i_cp"></div></div>
+        <div class="isec"><div class="isec-l">3. Uzunluk Seç</div><div class="ipills" id="i_lp"></div></div>
+        <div class="iprev" id="i_iprev"><i class="ti ti-check"></i><span id="i_itext">-</span></div>
       </div>
-      <div class="fg" id="i_mgrp" style="display:none"><label class="fl" id="i_mlbl">Marka</label><select class="fc" id="i_mar"><option value="">Seçin...</option></select></div>
       <div class="fg"><label class="fl">İade Miktarı <span class="req">*</span></label><input class="fc" type="number" id="i_mik" min="1" placeholder="0" inputmode="numeric"></div>
       <div class="fg"><label class="fl">Personel <span class="req">*</span></label><select class="fc" id="i_per"><option value="">Seçin...</option></select></div>
       <div class="fg"><label class="fl">Açıklama (Şantiye/Proje) <span class="req">*</span></label><textarea class="fc" id="i_ac" rows="2" placeholder="Örn: Afşin Elbistan Revizyonu - İade"></textarea></div>
@@ -448,10 +439,10 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
       <div class="fg"><label class="fl">Kategori <span class="req">*</span></label><select class="fc" id="m_kat" onchange="onKat('m')"><option value="">Seçin...</option></select></div>
       <div id="m_ibox" style="display:none">
         <div class="ibox">
-          <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Detayı</div>
-          <div class="isec"><div class="isec-l">Marka</div><div class="ipills" id="m_mp"></div></div>
-          <div class="isec"><div class="isec-l">Ürün Tipi</div><div class="ipills" id="m_cp"></div></div>
-          <div class="isec"><div class="isec-l">Uzunluk</div><div class="ipills" id="m_lp"></div></div>
+          <div class="ibox-t"><i class="ti ti-building-bridge"></i> İskele Ürünü Seç</div>
+          <div class="isec"><div class="isec-l">1. Marka Seç</div><div class="ipills" id="m_mp"></div></div>
+          <div class="isec"><div class="isec-l">2. Ürün Tipi Seç</div><div class="ipills" id="m_cp"></div></div>
+          <div class="isec"><div class="isec-l">3. Uzunluk Seç</div><div class="ipills" id="m_lp"></div></div>
           <div class="iprev" id="m_iprev"><i class="ti ti-check"></i><span id="m_itext">-</span></div>
         </div>
       </div>
@@ -532,7 +523,7 @@ select.fc{cursor:pointer}textarea.fc{resize:none;min-height:80px;font-size:14px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // === SABITLER ===
-var IMK = ['Layer','Oguzhan','Afix'];
+var IMK = ['Layer','Oğuzhan','Afix'];
 var ITY = ['Kol','Dikme','Kalas'];
 var IUZ = ['0,7 Metre','2 Metre','2,5 Metre','3 Metre'];
 var IST = {g:{m:null,t:null,u:null},c:{m:null,t:null,u:null},i:{m:null,t:null,u:null},M:{m:null,t:null,u:null}};
@@ -741,9 +732,34 @@ function nav(name){
 // === MODALS ===
 function openM(id){
   document.getElementById(id).classList.add('on');
-  if(id==='mGiris'){document.getElementById('g_tar').value=fd(new Date());fillKS('g_kat');fillPS('g_per');if(cu)document.getElementById('g_per').value=cu.kadi;document.getElementById('g_mgrp').style.display='none';document.getElementById('g_ibox').style.display='none';document.getElementById('g_ac').value='';}
-  if(id==='mCikis'){document.getElementById('c_tar').value=fd(new Date());fillKS('c_kat');fillPS('c_per');if(cu)document.getElementById('c_per').value=cu.kadi;document.getElementById('c_mgrp').style.display='none';document.getElementById('c_ibox').style.display='none';document.getElementById('c_ac').value='';}
-  if(id==='mIade'){document.getElementById('i_tar').value=fd(new Date());fillKS('i_kat');fillPS('i_per');if(cu)document.getElementById('i_per').value=cu.kadi;document.getElementById('i_mgrp').style.display='none';document.getElementById('i_ibox').style.display='none';document.getElementById('i_ac').value='';}
+  if(id==='mGiris'){
+    document.getElementById('g_tar').value=fd(new Date());
+    fillPS('g_per');if(cu)document.getElementById('g_per').value=cu.kadi;
+    document.getElementById('g_ac').value='';
+    document.getElementById('g_mik').value='';
+    // İskele kategorisini otomatik set et
+    var iskKat=ldb.kategoriler.filter(function(k){return k.iskeleKat;})[0];
+    if(iskKat)document.getElementById('g_kat').value=iskKat.id;
+    resetI('g');renderI('g');
+  }
+  if(id==='mCikis'){
+    document.getElementById('c_tar').value=fd(new Date());
+    fillPS('c_per');if(cu)document.getElementById('c_per').value=cu.kadi;
+    document.getElementById('c_ac').value='';
+    document.getElementById('c_mik').value='';
+    var iskKat2=ldb.kategoriler.filter(function(k){return k.iskeleKat;})[0];
+    if(iskKat2)document.getElementById('c_kat').value=iskKat2.id;
+    resetI('c');renderI('c');
+  }
+  if(id==='mIade'){
+    document.getElementById('i_tar').value=fd(new Date());
+    fillPS('i_per');if(cu)document.getElementById('i_per').value=cu.kadi;
+    document.getElementById('i_ac').value='';
+    document.getElementById('i_mik').value='';
+    var iskKat3=ldb.kategoriler.filter(function(k){return k.iskeleKat;})[0];
+    if(iskKat3)document.getElementById('i_kat').value=iskKat3.id;
+    resetI('i');renderI('i');
+  }
   if(id==='mMrk')fillKS('mk_k');
 }
 function closeM(id){document.getElementById(id).classList.remove('on');}
