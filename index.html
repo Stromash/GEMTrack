@@ -258,14 +258,39 @@ textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="mhdr"><div class="mttl"><i class="ti ti-arrow-bar-to-down" style="color:#16a34a"></i> Stok Girişi</div><button class="mcls" onclick="closeM('mGiris')"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="fg"><label class="fl">Tarih <span class="req">*</span></label><input class="fc" type="date" id="g_tar"></div>
-      <div class="ibox">
-        <div class="iboxt"><i class="ti ti-building-bridge"></i> İskele Ürünü Seçin</div>
-        <div class="isec"><div class="isecl"><span>1</span> Marka</div><div class="ipills" id="g_mp"></div></div>
-        <div class="isec"><div class="isecl"><span>2</span> Ürün Tipi</div><div class="ipills" id="g_cp"></div></div>
-        <div class="isec"><div class="isecl"><span>3</span> Uzunluk</div><div class="ipills" id="g_lp"></div></div>
-        <div class="iprev" id="g_prev"><i class="ti ti-check"></i><span id="g_ptxt"></span></div>
+      <!-- SEÇİM TÜRÜ -->
+      <div class="fg" style="margin-bottom:10px">
+        <label class="fl">Seçim Türü</label>
+        <div style="display:flex;gap:8px">
+          <div class="ip on" id="g_tip_iskele" onclick="setTip('g','iskele')" style="padding:10px 18px;border-radius:10px;font-size:14px">🏗️ İskele</div>
+          <div class="ip" id="g_tip_malzeme" onclick="setTip('g','malzeme')" style="padding:10px 18px;border-radius:10px;font-size:14px">🔧 Malzeme</div>
+        </div>
       </div>
-      <div class="fg"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="g_mik" min="1" placeholder="0" inputmode="numeric"></div>
+      <!-- İSKELE ALANI -->
+      <div id="g_iskele_sec">
+        <div class="ibox">
+          <div class="iboxt"><i class="ti ti-building-bridge"></i> İskele Ürünü Seçin</div>
+          <div class="isec"><div class="isecl"><span>1</span> Marka</div><div class="ipills" id="g_mp"></div></div>
+          <div class="isec"><div class="isecl"><span>2</span> Ürün Tipi</div><div class="ipills" id="g_cp"></div></div>
+          <div class="isec"><div class="isecl"><span>3</span> Uzunluk</div><div class="ipills" id="g_lp"></div></div>
+          <div class="iprev" id="g_prev"><i class="ti ti-check"></i><span id="g_ptxt"></span></div>
+        </div>
+      </div>
+      <!-- MALZEME ALANI -->
+      <div id="g_malzeme_sec" style="display:none">
+        <div class="ibox">
+          <div class="iboxt"><i class="ti ti-tool"></i> Malzeme Seçin</div>
+          <div class="ipills" style="gap:7px" id="g_mal_pills">
+            <div class="ip" onclick="pickMal('g','Kaynak Makinesi')">Kaynak Makinesi</div><div class="ip" onclick="pickMal('g','Eldiven')">Eldiven</div><div class="ip" onclick="pickMal('g','Taş Yünü')">Taş Yünü</div><div class="ip" onclick="pickMal('g','Kaynak Maskesi')">Kaynak Maskesi</div><div class="ip" onclick="pickMal('g','Taş Motoru')">Taş Motoru</div><div class="ip" onclick="pickMal('g','Elektrikli Matkap')">Elektrikli Matkap</div><div class="ip" onclick="pickMal('g','Şarjlı Matkap')">Şarjlı Matkap</div><div class="ip" onclick="pickMal('g','Klima')">Klima</div><div class="ip" onclick="pickMal('g','Isıtıcı')">Isıtıcı</div><div class="ip" onclick="pickMal('g','Konteynır')">Konteynır</div><div class="ip" onclick="pickMal('g','Pamuk Makası')">Pamuk Makası</div><div class="ip" onclick="pickMal('g','Sac Kesme Makası')">Sac Kesme Makası</div><div class="ip" onclick="pickMal('g','İskele Anahtarı')">İskele Anahtarı</div><div class="ip" onclick="pickMal('g','İskele Çekici')">İskele Çekici</div><div class="ip" onclick="pickMal('g','Çekiç')">Çekiç</div><div class="ip" onclick="pickMal('g','İş Ayakkabısı')">İş Ayakkabısı</div><div class="ip" onclick="pickMal('g','İş Pantolonu')">İş Pantolonu</div><div class="ip" onclick="pickMal('g','İş T-Shirt')">İş T-Shirt</div><div class="ip" onclick="pickMal('g','İş Montu')">İş Montu</div><div class="ip" onclick="pickMal('g','İş Sweat')">İş Sweat</div><div class="ip" onclick="pickMal('g','İş Yeleği')">İş Yeleği</div><div class="ip" onclick="pickMal('g','Baret')">Baret</div><div class="ip" onclick="pickMal('g','Emniyet Kemeri')">Emniyet Kemeri</div><div class="ip" onclick="pickMal('g','Seyyar Kablo')">Seyyar Kablo</div><div class="ip" onclick="pickMal('g','Kordon Makinesi')">Kordon Makinesi</div><div class="ip" onclick="pickMal('g','Kompresör')">Kompresör</div><div class="ip" onclick="pickMal('g','İskele Başlangıç Ayağı')">İskele Başlangıç Ayağı</div><div class="ip" onclick="pickMal('g','Kelepçe')">Kelepçe</div><div class="ip" onclick="pickMal('g','Merdivenli Kalas')">Merdivenli Kalas</div>
+          </div>
+          <div id="g_metre_grp" style="display:none;margin-top:12px">
+            <label class="fl">Metre Yazınız <span class="req">*</span></label>
+            <input class="fc" type="number" id="g_mal_metre" min="0" step="0.1" placeholder="Örn: 2.5" inputmode="decimal">
+          </div>
+          <div class="iprev" id="g_mal_prev" style="margin-top:10px"><i class="ti ti-check"></i><span id="g_mal_ptxt"></span></div>
+        </div>
+      </div>
+      <div class="fg" id="g_mik_grp"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="g_mik" min="1" placeholder="0" inputmode="numeric"></div>
       <div class="fg"><label class="fl">Açıklama / Şantiye <span class="req">*</span></label><textarea class="fc" id="g_ac" rows="2" placeholder="Çatalağzı Termik Santrali"></textarea></div>
     </div>
     <div class="mfoot"><button class="btn bto" style="flex:1" onclick="closeM('mGiris')">İptal</button><button class="btn bts" style="flex:2" onclick="saveGiris()"><i class="ti ti-check"></i> Kaydet</button></div>
@@ -279,14 +304,39 @@ textarea.fc{resize:none;min-height:80px;font-size:14px}
     <div class="mhdr"><div class="mttl"><i class="ti ti-arrow-bar-from-down" style="color:var(--er)"></i> Stok Çıkışı</div><button class="mcls" onclick="closeM('mCikis')"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="fg"><label class="fl">Tarih <span class="req">*</span></label><input class="fc" type="date" id="c_tar"></div>
-      <div class="ibox">
-        <div class="iboxt"><i class="ti ti-building-bridge"></i> İskele Ürünü Seçin</div>
-        <div class="isec"><div class="isecl"><span>1</span> Marka</div><div class="ipills" id="c_mp"></div></div>
-        <div class="isec"><div class="isecl"><span>2</span> Ürün Tipi</div><div class="ipills" id="c_cp"></div></div>
-        <div class="isec"><div class="isecl"><span>3</span> Uzunluk</div><div class="ipills" id="c_lp"></div></div>
-        <div class="iprev" id="c_prev"><i class="ti ti-check"></i><span id="c_ptxt"></span></div>
+      <!-- SEÇİM TÜRÜ -->
+      <div class="fg" style="margin-bottom:10px">
+        <label class="fl">Seçim Türü</label>
+        <div style="display:flex;gap:8px">
+          <div class="ip on" id="c_tip_iskele" onclick="setTip('c','iskele')" style="padding:10px 18px;border-radius:10px;font-size:14px">🏗️ İskele</div>
+          <div class="ip" id="c_tip_malzeme" onclick="setTip('c','malzeme')" style="padding:10px 18px;border-radius:10px;font-size:14px">🔧 Malzeme</div>
+        </div>
       </div>
-      <div class="fg"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="c_mik" min="1" placeholder="0" inputmode="numeric"></div>
+      <!-- İSKELE ALANI -->
+      <div id="c_iskele_sec">
+        <div class="ibox">
+          <div class="iboxt"><i class="ti ti-building-bridge"></i> İskele Ürünü Seçin</div>
+          <div class="isec"><div class="isecl"><span>1</span> Marka</div><div class="ipills" id="c_mp"></div></div>
+          <div class="isec"><div class="isecl"><span>2</span> Ürün Tipi</div><div class="ipills" id="c_cp"></div></div>
+          <div class="isec"><div class="isecl"><span>3</span> Uzunluk</div><div class="ipills" id="c_lp"></div></div>
+          <div class="iprev" id="c_prev"><i class="ti ti-check"></i><span id="c_ptxt"></span></div>
+        </div>
+      </div>
+      <!-- MALZEME ALANI -->
+      <div id="c_malzeme_sec" style="display:none">
+        <div class="ibox">
+          <div class="iboxt"><i class="ti ti-tool"></i> Malzeme Seçin</div>
+          <div class="ipills" style="gap:7px" id="c_mal_pills">
+            <div class="ip" onclick="pickMal('c','Kaynak Makinesi')">Kaynak Makinesi</div><div class="ip" onclick="pickMal('c','Eldiven')">Eldiven</div><div class="ip" onclick="pickMal('c','Taş Yünü')">Taş Yünü</div><div class="ip" onclick="pickMal('c','Kaynak Maskesi')">Kaynak Maskesi</div><div class="ip" onclick="pickMal('c','Taş Motoru')">Taş Motoru</div><div class="ip" onclick="pickMal('c','Elektrikli Matkap')">Elektrikli Matkap</div><div class="ip" onclick="pickMal('c','Şarjlı Matkap')">Şarjlı Matkap</div><div class="ip" onclick="pickMal('c','Klima')">Klima</div><div class="ip" onclick="pickMal('c','Isıtıcı')">Isıtıcı</div><div class="ip" onclick="pickMal('c','Konteynır')">Konteynır</div><div class="ip" onclick="pickMal('c','Pamuk Makası')">Pamuk Makası</div><div class="ip" onclick="pickMal('c','Sac Kesme Makası')">Sac Kesme Makası</div><div class="ip" onclick="pickMal('c','İskele Anahtarı')">İskele Anahtarı</div><div class="ip" onclick="pickMal('c','İskele Çekici')">İskele Çekici</div><div class="ip" onclick="pickMal('c','Çekiç')">Çekiç</div><div class="ip" onclick="pickMal('c','İş Ayakkabısı')">İş Ayakkabısı</div><div class="ip" onclick="pickMal('c','İş Pantolonu')">İş Pantolonu</div><div class="ip" onclick="pickMal('c','İş T-Shirt')">İş T-Shirt</div><div class="ip" onclick="pickMal('c','İş Montu')">İş Montu</div><div class="ip" onclick="pickMal('c','İş Sweat')">İş Sweat</div><div class="ip" onclick="pickMal('c','İş Yeleği')">İş Yeleği</div><div class="ip" onclick="pickMal('c','Baret')">Baret</div><div class="ip" onclick="pickMal('c','Emniyet Kemeri')">Emniyet Kemeri</div><div class="ip" onclick="pickMal('c','Seyyar Kablo')">Seyyar Kablo</div><div class="ip" onclick="pickMal('c','Kordon Makinesi')">Kordon Makinesi</div><div class="ip" onclick="pickMal('c','Kompresör')">Kompresör</div><div class="ip" onclick="pickMal('c','İskele Başlangıç Ayağı')">İskele Başlangıç Ayağı</div><div class="ip" onclick="pickMal('c','Kelepçe')">Kelepçe</div><div class="ip" onclick="pickMal('c','Merdivenli Kalas')">Merdivenli Kalas</div>
+          </div>
+          <div id="c_metre_grp" style="display:none;margin-top:12px">
+            <label class="fl">Metre Yazınız <span class="req">*</span></label>
+            <input class="fc" type="number" id="c_mal_metre" min="0" step="0.1" placeholder="Örn: 2.5" inputmode="decimal">
+          </div>
+          <div class="iprev" id="c_mal_prev" style="margin-top:10px"><i class="ti ti-check"></i><span id="c_mal_ptxt"></span></div>
+        </div>
+      </div>
+      <div class="fg" id="c_mik_grp"><label class="fl">Miktar <span class="req">*</span></label><input class="fc" type="number" id="c_mik" min="1" placeholder="0" inputmode="numeric"></div>
       <div class="fg"><label class="fl">Teslim Alan</label><input class="fc" id="c_tel" placeholder="Ad Soyad (opsiyonel)"></div>
       <div class="fg"><label class="fl">Açıklama / Şantiye <span class="req">*</span></label><textarea class="fc" id="c_ac" rows="2" placeholder="Afşin Elbistan Revizyonu"></textarea></div>
     </div>
@@ -408,6 +458,51 @@ function getISK(){return ldb.kategoriler.filter(function(k){return k.iskeleKat;}
 function mAdi(m){if(!m)return'-';if(m.isk_m&&m.isk_t&&m.isk_u)return m.isk_m+' - '+m.isk_u+' '+m.isk_t;var k=gK(m.kategoriId);var mk=m.markaId?gMk(m.markaId):null;return(k?k.ad:'?')+(mk?' / '+mk.ad:'');}
 function setSdot(s){var d=document.getElementById('sdot');if(!d)return;d.className='sdot';if(s==='sy')d.classList.add('sy');if(s==='se')d.classList.add('se');}
 
+
+// SEÇİM TÜRÜ YÖNETİMİ
+var tipState = {g: 'iskele', c: 'iskele'};
+var malState = {g: null, c: null};
+
+function setTip(pfx, tip) {
+  tipState[pfx] = tip;
+  document.getElementById(pfx+'_tip_iskele').classList.toggle('on', tip==='iskele');
+  document.getElementById(pfx+'_tip_malzeme').classList.toggle('on', tip==='malzeme');
+  document.getElementById(pfx+'_iskele_sec').style.display = tip==='iskele' ? 'block' : 'none';
+  document.getElementById(pfx+'_malzeme_sec').style.display = tip==='malzeme' ? 'block' : 'none';
+  // Malzeme tipinde miktar göster, iskele tipinde de göster
+  if(tip==='iskele'){resetI(pfx);renderI(pfx);}
+  if(tip==='malzeme'){malState[pfx]=null;resetMalPills(pfx);}
+}
+
+function resetMalPills(pfx) {
+  var pills = document.querySelectorAll('#'+pfx+'_mal_pills .ip');
+  for(var i=0;i<pills.length;i++) pills[i].classList.remove('on');
+  var prev = document.getElementById(pfx+'_mal_prev');
+  if(prev) prev.classList.remove('on');
+  var mgrp = document.getElementById(pfx+'_metre_grp');
+  if(mgrp) mgrp.style.display='none';
+}
+
+function pickMal(pfx, malAdi) {
+  malState[pfx] = malAdi;
+  // Tüm pilleri sıfırla, seçileni işaretle
+  var pills = document.querySelectorAll('#'+pfx+'_mal_pills .ip');
+  for(var i=0;i<pills.length;i++) {
+    pills[i].classList.toggle('on', pills[i].textContent === malAdi);
+  }
+  // Preview güncelle
+  var prev = document.getElementById(pfx+'_mal_prev');
+  var ptxt = document.getElementById(pfx+'_mal_ptxt');
+  if(prev && ptxt){prev.classList.add('on'); ptxt.textContent = malAdi;}
+  // Merdivenli Kalas için metre alanı
+  var mgrp = document.getElementById(pfx+'_metre_grp');
+  if(mgrp) mgrp.style.display = (malAdi === 'Merdivenli Kalas') ? 'block' : 'none';
+  if(malAdi !== 'Merdivenli Kalas') {
+    var mEl = document.getElementById(pfx+'_mal_metre');
+    if(mEl) mEl.value = '';
+  }
+}
+
 // İSKELE PILLS
 function renderI(p){
   var s=IST[p];
@@ -448,8 +543,31 @@ function nav(name){
 // MODALS
 function openM(id){
   document.getElementById(id).classList.add('on');
-  if(id==='mGiris'){document.getElementById('g_tar').value=fd(new Date());document.getElementById('g_mik').value='';document.getElementById('g_ac').value='';resetI('g');renderI('g');}
-  if(id==='mCikis'){document.getElementById('c_tar').value=fd(new Date());document.getElementById('c_mik').value='';document.getElementById('c_ac').value='';document.getElementById('c_tel').value='';resetI('c');renderI('c');}
+  if(id==='mGiris'){
+    document.getElementById('g_tar').value=fd(new Date());
+    document.getElementById('g_mik').value='';
+    document.getElementById('g_ac').value='';
+    tipState.g='iskele';
+    document.getElementById('g_tip_iskele').classList.add('on');
+    document.getElementById('g_tip_malzeme').classList.remove('on');
+    document.getElementById('g_iskele_sec').style.display='block';
+    document.getElementById('g_malzeme_sec').style.display='none';
+    malState.g=null;
+    resetI('g');renderI('g');
+  }
+  if(id==='mCikis'){
+    document.getElementById('c_tar').value=fd(new Date());
+    document.getElementById('c_mik').value='';
+    document.getElementById('c_ac').value='';
+    document.getElementById('c_tel').value='';
+    tipState.c='iskele';
+    document.getElementById('c_tip_iskele').classList.add('on');
+    document.getElementById('c_tip_malzeme').classList.remove('on');
+    document.getElementById('c_iskele_sec').style.display='block';
+    document.getElementById('c_malzeme_sec').style.display='none';
+    malState.c=null;
+    resetI('c');renderI('c');
+  }
   if(id==='mIade'){document.getElementById('i_tar').value=fd(new Date());document.getElementById('i_mik').value='';document.getElementById('i_ac').value='';resetI('i');renderI('i');}
   if(id==='mMrk')fillKS('mk_k');
 }
@@ -480,13 +598,37 @@ function getHD(pfx){
   var ac=document.getElementById(pfx+'_ac').value.trim();
   if(!miktar||!tarih){toast('Tarih ve miktar zorunludur!','err');return null;}
   if(!ac){toast('Açıklama / şantiye adı zorunludur!','err');return null;}
+  var tip=tipState[pfx]||'iskele';
+
+  if(tip==='malzeme'){
+    var secilenMal=malState[pfx];
+    if(!secilenMal){toast('Malzeme seçiniz!','err');return null;}
+    var urunAdi=secilenMal;
+    var metreVal='';
+    if(secilenMal==='Merdivenli Kalas'){
+      metreVal=(document.getElementById(pfx+'_mal_metre').value||'').trim();
+      if(!metreVal){toast('Merdivenli Kalas için metre giriniz!','err');return null;}
+      urunAdi='Merdivenli Kalas - '+metreVal+' m';
+    }
+    return{urunAdi:urunAdi,im:null,it:null,iu:metreVal||null,miktar:miktar,tarih:tarih,ac:ac,tipTur:'malzeme',malAdi:secilenMal};
+  }
+
+  // İskele
   var lbl=iLbl(pfx);
   if(!lbl){toast('Marka, ürün tipi ve uzunluk seçiniz!','err');return null;}
   var s=IST[pfx];
-  return{urunAdi:lbl,im:s.m,it:s.t,iu:s.u,miktar:miktar,tarih:tarih,ac:ac};
+  return{urunAdi:lbl,im:s.m,it:s.t,iu:s.u,miktar:miktar,tarih:tarih,ac:ac,tipTur:'iskele'};
 }
 
 function findMal(d){
+  if(d.tipTur==='malzeme'){
+    for(var i=0;i<ldb.malzemeler.length;i++){
+      var mm=ldb.malzemeler[i];
+      if(mm.malAdi===d.malAdi&&(!d.iu||mm.isk_u===d.iu))return mm;
+    }
+    return null;
+  }
+  // İskele
   for(var i=0;i<ldb.malzemeler.length;i++){var mm=ldb.malzemeler[i];if(mm.isk_m===d.im&&mm.isk_t===d.it&&mm.isk_u===d.iu)return mm;}
   return null;
 }
@@ -497,11 +639,19 @@ function saveGiris(){
   var d=getHD('g');if(!d)return;
   var mal=findMal(d);var malId=mal?mal.id:gid();
   fdb.ref('malzemeler/'+malId).transaction(function(cur){
-    if(!cur)return{kategoriId:getISKKatId(),birim:'Adet',stok:d.miktar,minstok:0,raf:'',urunAdi:d.urunAdi,isk_m:d.im,isk_t:d.it,isk_u:d.iu};
+    if(!cur){
+      var nd={birim:'Adet',stok:d.miktar,minstok:0,raf:'',urunAdi:d.urunAdi};
+      if(d.tipTur==='malzeme'){nd.kategoriId='malzeme';nd.malAdi=d.malAdi;nd.isk_u=d.iu||null;}
+      else{nd.kategoriId=getISKKatId();nd.isk_m=d.im;nd.isk_t=d.it;nd.isk_u=d.iu;}
+      return nd;
+    }
     cur.stok=(cur.stok||0)+d.miktar;return cur;
   },function(err,ok){
     if(err||!ok){toast('Stok güncelleme hatası!','err');return;}
-    fbSet('girisler/'+gid(),{tarih:fdt(),malzemeId:malId,urunAdi:d.urunAdi,miktar:d.miktar,tip:'giris',aciklama:d.ac,isk_m:d.im,isk_t:d.it,isk_u:d.iu},function(){closeM('mGiris');toast('Giriş kaydedildi! (+'+d.miktar+')');});
+    var rec={tarih:fdt(),malzemeId:malId,urunAdi:d.urunAdi,miktar:d.miktar,tip:'giris',tipTur:d.tipTur||'iskele',aciklama:d.ac};
+    if(d.tipTur==='malzeme'){rec.malAdi=d.malAdi;if(d.iu)rec.metre=d.iu;}
+    else{rec.isk_m=d.im;rec.isk_t=d.it;rec.isk_u=d.iu;}
+    fbSet('girisler/'+gid(),rec,function(){closeM('mGiris');toast('Giriş kaydedildi! (+'+d.miktar+')');});
   });
 }
 
@@ -513,7 +663,10 @@ function saveCikis(){
   fdb.ref('malzemeler/'+mal.id).transaction(function(cur){if(!cur)return cur;cur.stok-=d.miktar;return cur;},function(err,ok){
     if(err||!ok){toast('Stok güncelleme hatası!','err');return;}
     var tel=document.getElementById('c_tel').value.trim();
-    fbSet('cikislar/'+gid(),{tarih:fdt(),malzemeId:mal.id,urunAdi:d.urunAdi,miktar:d.miktar,tip:'cikis',teslimalan:tel,aciklama:d.ac,isk_m:d.im,isk_t:d.it,isk_u:d.iu},function(){closeM('mCikis');toast('Çıkış kaydedildi! (-'+d.miktar+')');});
+    var rec={tarih:fdt(),malzemeId:mal.id,urunAdi:d.urunAdi,miktar:d.miktar,tip:'cikis',tipTur:d.tipTur||'iskele',teslimalan:tel,aciklama:d.ac};
+    if(d.tipTur==='malzeme'){rec.malAdi=d.malAdi;if(d.iu)rec.metre=d.iu;}
+    else{rec.isk_m=d.im;rec.isk_t=d.it;rec.isk_u=d.iu;}
+    fbSet('cikislar/'+gid(),rec,function(){closeM('mCikis');toast('Çıkış kaydedildi! (-'+d.miktar+')');});
   });
 }
 
