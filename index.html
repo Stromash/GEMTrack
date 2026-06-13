@@ -133,6 +133,31 @@ textarea.fc{resize:none;min-height:80px;font-size:14px}
 </style>
 </head>
 <body>
+
+<!-- GİRİŞ EKRANI -->
+<div id="loginScreen" style="position:fixed;inset:0;background:linear-gradient(150deg,#0D2B4E,#1a3d6e);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px">
+  <div style="background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="text-align:center;margin-bottom:22px">
+      <img src="icons/icon-192x192.png" style="width:64px;height:64px;border-radius:16px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto">
+      <div style="font-size:22px;font-weight:800;color:#0D2B4E">GEMTrack</div>
+      <div style="font-size:11px;color:#5a7a99;letter-spacing:1px;text-transform:uppercase;margin-top:4px">Depo Yönetim Sistemi</div>
+    </div>
+    <div id="loginErr" style="background:#fee2e2;color:#dc2626;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:12px;display:none;align-items:center;gap:8px">
+      <i class="ti ti-alert-circle"></i><span id="loginErrMsg">Hata</span>
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="display:block;font-size:11px;font-weight:700;color:#5a7a99;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Kullanıcı Adı</label>
+      <input id="loginKadi" style="width:100%;padding:12px 14px;border:1.5px solid #d0dde8;border-radius:10px;font-size:16px;color:#0D2B4E;background:#fff;outline:none;-webkit-appearance:none;font-family:inherit;box-sizing:border-box" placeholder="kullanici.adi" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false">
+    </div>
+    <div style="margin-bottom:18px">
+      <label style="display:block;font-size:11px;font-weight:700;color:#5a7a99;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Şifre</label>
+      <input id="loginSifre" style="width:100%;padding:12px 14px;border:1.5px solid #d0dde8;border-radius:10px;font-size:16px;color:#0D2B4E;background:#fff;outline:none;-webkit-appearance:none;font-family:inherit;box-sizing:border-box" type="password" placeholder="••••••" autocomplete="current-password">
+    </div>
+    <button onclick="doLogin()" style="width:100%;background:#2E87D4;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;box-sizing:border-box">
+      <i class="ti ti-login"></i> Giriş Yap
+    </button>
+  </div>
+</div>
 <div id="app" style="display:none">
   <!-- HEADER -->
   <div class="hdr">
@@ -430,53 +455,18 @@ textarea.fc{resize:none;min-height:80px;font-size:14px}
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {
-  getFirestore, collection, doc, getDocs, setDoc, addDoc,
-  query, where, serverTimestamp, onSnapshot, updateDoc, deleteDoc
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyDvqAAaNLp7vwQ7URbUSVSTzfEDFxB1mAU',
-  authDomain: 'gemtrack-fcabe.firebaseapp.com',
-  projectId: 'gemtrack-fcabe'
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+<script>
 var IMK=['Layer','Oğuzhan','Afix'];
 var ITY=['KOL','DİKME','KALAS'];
 var IUZ=['0,7 Metre','2 Metre','2,5 Metre','3 Metre'];
 var IST={g:{m:null,t:null,u:null},c:{m:null,t:null,u:null},i:{m:null,t:null,u:null},M:{m:null,t:null,u:null}};
 var ldb={kategoriler:[],markalar:[],malzemeler:[],girisler:[],cikislar:[],iadeler:[]};
-
-var DUSERS = [
-  {id:'u_admin',    adSoyad:'Admin',          kullaniciAdi:'admin',         sifre:'admin123',        rol:'admin',    aktif:true},
-  {id:'u_umit',     adSoyad:'Ümit Gürbüz',    kullaniciAdi:'umitgurbuz',    sifre:'umitgurbuz123',   rol:'personel', aktif:true},
-  {id:'u_mertcan',  adSoyad:'Mertcan Uca',    kullaniciAdi:'mertcanuca',    sifre:'mertcanuca123',   rol:'personel', aktif:true},
-  {id:'u_gorkem',   adSoyad:'Görkem Özer',    kullaniciAdi:'gorkemozer',    sifre:'gorkemozer123',   rol:'personel', aktif:true},
-  {id:'u_tolga',    adSoyad:'Tolga Yılmaz',   kullaniciAdi:'tolgayilmaz',   sifre:'tolgayilmaz123',  rol:'personel', aktif:true},
-  {id:'u_mehmet',   adSoyad:'Mehmet Uca',     kullaniciAdi:'mehmetuca',     sifre:'mehmetuca123',    rol:'personel', aktif:true},
-  {id:'u_isa',      adSoyad:'İsa Uca',        kullaniciAdi:'isauca',        sifre:'isauca123',       rol:'personel', aktif:true},
-  {id:'u_eflatun',  adSoyad:'Eflatun Uca',    kullaniciAdi:'eflatunuca',    sifre:'eflatunuca123',   rol:'personel', aktif:true},
-  {id:'u_cetin',    adSoyad:'Çetin Uca',      kullaniciAdi:'cetinuca',      sifre:'cetinuca123',     rol:'personel', aktif:true},
-  {id:'u_utku',     adSoyad:'Utku Belli',     kullaniciAdi:'utkubelli',     sifre:'utkubelli123',    rol:'personel', aktif:true},
-  {id:'u_samet',    adSoyad:'Samet Uca',      kullaniciAdi:'sametuca',      sifre:'sametuca123',     rol:'personel', aktif:true},
-  {id:'u_oruc',     adSoyad:'Oruç Egemen',    kullaniciAdi:'orucegemen',    sifre:'orucegemen123',   rol:'personel', aktif:true},
-  {id:'u_recep',    adSoyad:'Recep Özmen',    kullaniciAdi:'recepozmen',    sifre:'recepozmen123',   rol:'personel', aktif:true},
-  {id:'u_hilmi',    adSoyad:'Hilmi Demirel',  kullaniciAdi:'hilmidemirel',  sifre:'hilmidemirel123', rol:'personel', aktif:true},
-  {id:'u_arda',     adSoyad:'Arda Uca',       kullaniciAdi:'aradauca',      sifre:'aradauca123',     rol:'personel', aktif:true},
-  {id:'u_muhammet', adSoyad:'Muhammet Uca',   kullaniciAdi:'muhammetuca',   sifre:'muhammetuca123',  rol:'personel', aktif:true},
-  {id:'u_cetins',   adSoyad:'Çetin Salgar',   kullaniciAdi:'cetinsalgar',   sifre:'cetinsalgar123',  rol:'personel', aktif:true},
-  {id:'u_erkan',    adSoyad:'Erkan Ertuğrul', kullaniciAdi:'erkanertugrul', sifre:'erkanertugrul123',rol:'personel', aktif:true},
-  {id:'u_bulent',   adSoyad:'Bülent Uca',     kullaniciAdi:'bulentuca',     sifre:'bulentuca123',    rol:'personel', aktif:true},
-  {id:'u_gencay',   adSoyad:'Gencay Uca',     kullaniciAdi:'gencayuca',     sifre:'gencayuca123',    rol:'personel', aktif:true}
-];
-var cu = null;
-var ldbUsers = [];
+var fdb=null;
 var eMalId=null;
 
 function pad(n){return n<10?'0'+n:''+n;}
@@ -623,26 +613,9 @@ function onMKat(){
   else{ibox.style.display='none';mgrp.style.display=(ms.length||req)?'block':'none';if(katId)fillMS('m_mar',katId,req);}
 }
 
-// FIRESTORE YARDIMCI
-async function fsWrite(colName, data){
-  setSdot('sy');
-  try{ await addDoc(collection(db,colName), data); setSdot(''); }
-  catch(e){ setSdot('se'); toast('Kayıt hatası!','err'); console.error(e); throw e; }
-}
-async function fsUpdate(colName, docId, data){
-  setSdot('sy');
-  try{ await updateDoc(doc(db,colName,docId), data); setSdot(''); }
-  catch(e){ setSdot('se'); toast('Güncelleme hatası!','err'); console.error(e); throw e; }
-}
-async function fsDel(colName, docId){
-  try{ await deleteDoc(doc(db,colName,docId)); }
-  catch(e){ toast('Silme hatası!','err'); console.error(e); throw e; }
-}
-async function fsSetId(colName, docId, data){
-  setSdot('sy');
-  try{ await setDoc(doc(db,colName,docId), data, {merge:true}); setSdot(''); }
-  catch(e){ setSdot('se'); toast('Kayıt hatası!','err'); console.error(e); throw e; }
-}
+// FIREBASE
+function fbSet(p,d,cb){setSdot('sy');fdb.ref(p).set(d,function(e){setSdot('');if(e)toast('Kayıt hatası!','err');else if(cb)cb();});}
+function fbRm(p,cb){fdb.ref(p).remove(function(){if(cb)cb();});}
 
 // GİRİŞ/ÇIKIŞ/İADE ORTAK
 function getHD(pfx){
@@ -688,85 +661,98 @@ function findMal(d){
 
 function getISKKatId(){var k=getISK();return k?k.id:'iskele';}
 
-async function saveGiris(){
-  var d=getHD('g'); if(!d)return;
-  var mal=findMal(d);
-  var now=fdt();
-  try{
-    if(mal && mal.id){
-      await updateDoc(doc(db,'malzemeler',mal.id),{stok:(mal.stok||0)+d.miktar});
-    } else {
-      var nm={urunAdi:d.urunAdi,stok:d.miktar,minstok:0,birim:'Adet',tipTur:d.tur};
-      if(d.tur==='iskele'){nm.isk_m=d.isk_m;nm.isk_t=d.isk_t;nm.isk_u=d.isk_u;}
-      else{nm.malAdi=d.malAdi;if(d.metre)nm.metre=d.metre;}
-      await addDoc(collection(db,'malzemeler'),nm);
+function saveGiris(){
+  var d=getHD('g');if(!d)return;
+  var mal=findMal(d);var malId=mal?mal.id:gid();
+  fdb.ref('malzemeler/'+malId).transaction(function(cur){
+    if(!cur){
+      var nd={birim:'Adet',stok:d.miktar,minstok:0,raf:'',urunAdi:d.urunAdi};
+      if(d.tipTur==='malzeme'){nd.kategoriId='malzeme';nd.malAdi=d.malAdi;nd.isk_u=d.iu||null;}
+      else{nd.kategoriId=getISKKatId();nd.isk_m=d.im;nd.isk_t=d.it;nd.isk_u=d.iu;}
+      return nd;
     }
-    var rec={tarih:now,urunAdi:d.urunAdi,miktar:d.miktar,tip:'giris',tipTur:d.tur,aciklama:d.ac,createdAt:serverTimestamp()};
-    if(d.tur==='iskele'){rec.isk_m=d.isk_m;rec.isk_t=d.isk_t;rec.isk_u=d.isk_u;}
-    else{rec.malAdi=d.malAdi;if(d.metre)rec.metre=d.metre;}
-    if(cu){rec.yapanKullaniciId=cu.id||'';rec.yapanKullaniciAdi=cu.adSoyad||'';rec.yapanKullaniciAdi2=cu.kullaniciAdi||'';rec.yapanRol=cu.rol||'';}
-    await addDoc(collection(db,'girisler'),rec);
-    closeM('mGiris'); toast('Giriş kaydedildi! (+'+d.miktar+')');
-  }catch(e){toast('Kayıt hatası!','err');console.error(e);}
+    cur.stok=(cur.stok||0)+d.miktar;return cur;
+  },function(err,ok){
+    if(err||!ok){toast('Stok güncelleme hatası!','err');return;}
+    var rec={tarih:fdt(),malzemeId:malId,urunAdi:d.urunAdi,miktar:d.miktar,tip:'giris',tipTur:d.tipTur||'iskele',aciklama:d.ac};
+    if(d.tipTur==='malzeme'){rec.malAdi=d.malAdi;if(d.iu)rec.metre=d.iu;}
+    else{rec.isk_m=d.im;rec.isk_t=d.it;rec.isk_u=d.iu;}
+    fbSet('girisler/'+gid(),rec,function(){closeM('mGiris');toast('Giriş kaydedildi! (+'+d.miktar+')');});
+  });
 }
 
-async function saveCikis(){
-  var d=getHD('c'); if(!d)return;
+function saveCikis(){
+  var d=getHD('c');if(!d)return;
   var mal=findMal(d);
   if(!mal){toast('Bu ürün depoda yok!','err');return;}
   if(mal.stok<d.miktar){toast('Yetersiz stok! Mevcut: '+mal.stok,'err');return;}
-  var now=fdt();
-  var tel=document.getElementById('c_tel').value.trim();
-  try{
-    await updateDoc(doc(db,'malzemeler',mal.id),{stok:Math.max(0,(mal.stok||0)-d.miktar)});
-    var rec={tarih:now,urunAdi:d.urunAdi,miktar:d.miktar,tip:'cikis',tipTur:d.tur,teslimalan:tel,aciklama:d.ac,createdAt:serverTimestamp()};
-    if(d.tur==='iskele'){rec.isk_m=d.isk_m;rec.isk_t=d.isk_t;rec.isk_u=d.isk_u;}
-    else{rec.malAdi=d.malAdi;if(d.metre)rec.metre=d.metre;}
-    if(cu){rec.yapanKullaniciId=cu.id||'';rec.yapanKullaniciAdi=cu.adSoyad||'';rec.yapanKullaniciAdi2=cu.kullaniciAdi||'';rec.yapanRol=cu.rol||'';}
-    await addDoc(collection(db,'cikislar'),rec);
-    closeM('mCikis'); toast('Çıkış kaydedildi! (-'+d.miktar+')');
-  }catch(e){toast('Kayıt hatası!','err');console.error(e);}
+  fdb.ref('malzemeler/'+mal.id).transaction(function(cur){if(!cur)return cur;cur.stok-=d.miktar;return cur;},function(err,ok){
+    if(err||!ok){toast('Stok güncelleme hatası!','err');return;}
+    var tel=document.getElementById('c_tel').value.trim();
+    var rec={tarih:fdt(),malzemeId:mal.id,urunAdi:d.urunAdi,miktar:d.miktar,tip:'cikis',tipTur:d.tipTur||'iskele',teslimalan:tel,aciklama:d.ac};
+    if(d.tipTur==='malzeme'){rec.malAdi=d.malAdi;if(d.iu)rec.metre=d.iu;}
+    else{rec.isk_m=d.im;rec.isk_t=d.it;rec.isk_u=d.iu;}
+    fbSet('cikislar/'+gid(),rec,function(){closeM('mCikis');toast('Çıkış kaydedildi! (-'+d.miktar+')');});
+  });
 }
 
-async function saveIade(){
-  var d=getHD('i'); if(!d)return;
-  var mal=findMal(d);
-  var now=fdt();
-  try{
-    if(mal && mal.id){
-      await updateDoc(doc(db,'malzemeler',mal.id),{stok:(mal.stok||0)+d.miktar});
-    } else {
-      var nm2={urunAdi:d.urunAdi,stok:d.miktar,minstok:0,birim:'Adet',tipTur:d.tur};
-      if(d.tur==='iskele'){nm2.isk_m=d.isk_m;nm2.isk_t=d.isk_t;nm2.isk_u=d.isk_u;}
-      else{nm2.malAdi=d.malAdi;if(d.metre)nm2.metre=d.metre;}
-      await addDoc(collection(db,'malzemeler'),nm2);
-    }
-    var iRec={tarih:now,urunAdi:d.urunAdi,miktar:d.miktar,tip:'iade',tipTur:d.tur,aciklama:d.ac,createdAt:serverTimestamp()};
-    if(d.tur==='iskele'){iRec.isk_m=d.isk_m;iRec.isk_t=d.isk_t;iRec.isk_u=d.isk_u;}
-    else{iRec.malAdi=d.malAdi;if(d.metre)iRec.metre=d.metre;}
-    if(cu){iRec.yapanKullaniciId=cu.id||'';iRec.yapanKullaniciAdi=cu.adSoyad||'';iRec.yapanKullaniciAdi2=cu.kullaniciAdi||'';iRec.yapanRol=cu.rol||'';}
-    await addDoc(collection(db,'iadeler'),iRec);
-    closeM('mIade'); toast('İade kaydedildi! (+'+d.miktar+')');
-  }catch(e){toast('Kayıt hatası!','err');console.error(e);}
+function saveIade(){
+  var d=getHD('i');if(!d)return;
+  var mal=findMal(d);var malId=mal?mal.id:gid();
+  fdb.ref('malzemeler/'+malId).transaction(function(cur){
+    if(!cur)return{kategoriId:getISKKatId(),birim:'Adet',stok:d.miktar,minstok:0,raf:'',urunAdi:d.urunAdi,isk_m:d.im,isk_t:d.it,isk_u:d.iu};
+    cur.stok=(cur.stok||0)+d.miktar;return cur;
+  },function(err,ok){
+    if(err||!ok){toast('Stok güncelleme hatası!','err');return;}
+    fbSet('iadeler/'+gid(),{tarih:fdt(),malzemeId:malId,urunAdi:d.urunAdi,miktar:d.miktar,tip:'iade',aciklama:d.ac,isk_m:d.im,isk_t:d.it,isk_u:d.iu},function(){closeM('mIade');toast('İade kaydedildi! (+'+d.miktar+')');});
+  });
 }
 
-async function saveMal(){
-  var ad=document.getElementById('m_ad').value.trim();
-  if(!ad){toast('Ürün adı zorunludur!','err');return;}
-  var data={urunAdi:ad,tipTur:document.getElementById('m_tur').value,stok:Number(document.getElementById('m_stok').value)||0,minstok:Number(document.getElementById('m_min').value)||0,raf:document.getElementById('m_raf').value.trim(),birim:'Adet'};
-  try{
-    if(eMalId){ await updateDoc(doc(db,'malzemeler',eMalId),data); }
-    else{ await addDoc(collection(db,'malzemeler'),data); }
-    closeM('mMal'); toast(eMalId?'Güncellendi.':'Eklendi.');
-  }catch(e){toast('Kayıt hatası!','err');console.error(e);}
+// RENDER FONKSİYONLARI
+function renderDash(){
+  var kr=ldb.malzemeler.filter(function(m){return m.minstok>0&&m.stok<m.minstok;});
+  var ts=ldb.malzemeler.reduce(function(s,m){return s+(m.stok||0);},0);
+  document.getElementById('stT').textContent=ldb.malzemeler.length;
+  document.getElementById('stS').textContent=ts;
+  document.getElementById('stK').textContent=kr.length;
+  var bug=fd(new Date());
+  var bc=ldb.girisler.filter(function(g){return g.tarih&&g.tarih.startsWith(bug);}).length+ldb.cikislar.filter(function(c){return c.tarih&&c.tarih.startsWith(bug);}).length+(ldb.iadeler||[]).filter(function(i){return i.tarih&&i.tarih.startsWith(bug);}).length;
+  document.getElementById('stB').textContent=bc;
+  var all=[];
+  ldb.girisler.forEach(function(g){all.push({tarih:g.tarih,adi:g.urunAdi||'-',mik:g.miktar,tip:'giris',ac:g.aciklama});});
+  ldb.cikislar.forEach(function(c){all.push({tarih:c.tarih,adi:c.urunAdi||'-',mik:c.miktar,tip:'cikis',ac:c.aciklama});});
+  (ldb.iadeler||[]).forEach(function(i){all.push({tarih:i.tarih,adi:i.urunAdi||'-',mik:i.miktar,tip:'iade',ac:i.aciklama});});
+  all.sort(function(a,b){return b.tarih>a.tarih?1:-1;});all=all.slice(0,8);
+  var col={giris:'bxg',cikis:'bxr',iade:'bxp'};var sgn={giris:'+',cikis:'-',iade:'↩'};
+  var html='';
+  for(var i=0;i<all.length;i++){var h=all[i];html+='<div class="ic" style="padding:10px 13px;margin-bottom:7px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div style="font-size:13px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(h.adi)+'</div><span class="bx '+(col[h.tip]||'bxgr')+'" style="flex-shrink:0">'+sgn[h.tip]+h.mik+'</span></div>'+(h.ac?'<div style="font-size:11px;color:var(--mu);margin-top:3px"><i class="ti ti-map-pin" style="font-size:11px"></i> '+esc(h.ac)+'</div>':'')+'</div>';}
+  if(!all.length)html='<div class="empty"><i class="ti ti-inbox"></i><p>Henüz hareket yok</p></div>';
+  document.getElementById('dHar').innerHTML=html;
+  var uh='';
+  if(kr.length){uh='<div class="st" style="margin-top:12px">Kritik Stok</div>';kr.forEach(function(m){uh+='<div class="abox" style="background:var(--erb);color:var(--er);margin-bottom:6px"><i class="ti ti-alert-triangle"></i><div><strong>'+esc(mAdi(m))+'</strong> — '+m.stok+' / '+m.minstok+'</div></div>';});}
+  document.getElementById('dUya').innerHTML=uh;
 }
 
-async function delMal(id){
-  if(!confirm('Silmek istediğinizden emin misiniz?'))return;
-  try{ await deleteDoc(doc(db,'malzemeler',id)); toast('Silindi.'); }
-  catch(e){toast('Silme hatası!','err');console.error(e);}
+function renderMal(){
+  var sel=document.getElementById('katFil');var cur=sel.value;
+  sel.innerHTML='<option value="">Tüm Kategoriler</option>';
+  ldb.kategoriler.forEach(function(k){sel.innerHTML+='<option value="'+k.id+'"'+(cur===k.id?' selected':'')+'>'+esc(k.ad)+'</option>';});
+  var list=ldb.malzemeler;if(cur)list=list.filter(function(m){return m.kategoriId===cur;});
+  var html='';
+  for(var j=0;j<list.length;j++){
+    var m=list[j];var warn=m.minstok>0&&m.stok<m.minstok;var low=!warn&&m.minstok>0&&m.stok<m.minstok*1.5;
+    var sc=warn?'var(--er)':low?'var(--wn)':'var(--ok)';var pct=m.minstok>0?Math.min(100,Math.round(m.stok/m.minstok*100)):100;
+    html+='<div class="ic"><div class="ich"><div class="ict">'+esc(mAdi(m))+'</div>'+(warn?'<span class="bx bxr">Kritik</span>':low?'<span class="bx bxw">Düşük</span>':'<span class="bx bxg">Normal</span>')+'</div>';
+    html+='<div style="display:flex;gap:16px;margin-bottom:6px"><div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:1px">Stok</div><span style="font-size:20px;font-weight:800;color:'+sc+'">'+m.stok+'</span></div><div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:1px">Kritik</div><span style="font-size:14px;font-weight:700">'+m.minstok+'</span></div>'+(m.raf?'<div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:1px">Raf</div><span style="font-size:14px;font-weight:700">'+esc(m.raf)+'</span></div>':'')+'</div>';
+    html+='<div class="prog"><div class="progb" style="width:'+pct+'%;background:'+sc+'"></div></div>';
+    html+='<div class="ica" style="margin-top:9px"><button class="ab abe" onclick="openMalM(\''+m.id+'\')"><i class="ti ti-edit"></i> Düzenle</button><button class="ab abd" onclick="delMal(\''+m.id+'\')"><i class="ti ti-trash"></i> Sil</button><button class="ab abg" onclick="qkG(\''+m.id+'\')"><i class="ti ti-arrow-bar-to-down"></i> Giriş</button><button class="ab abr" onclick="qkC(\''+m.id+'\')"><i class="ti ti-arrow-bar-from-down"></i> Çıkış</button></div></div>';
+  }
+  if(!list.length)html='<div class="empty"><i class="ti ti-box"></i><p>Henüz malzeme eklenmedi</p></div>';
+  document.getElementById('malList').innerHTML=html;
 }
 
+function qkG(mid){var m=gM(mid);if(!m)return;openM('mGiris');if(m.isk_m){setTimeout(function(){IST.g.m=m.isk_m;IST.g.t=m.isk_t;IST.g.u=m.isk_u;renderI('g');},100);}}
+function qkC(mid){var m=gM(mid);if(!m)return;openM('mCikis');if(m.isk_m){setTimeout(function(){IST.c.m=m.isk_m;IST.c.t=m.isk_t;IST.c.u=m.isk_u;renderI('c');},100);}}
 
 function openMalM(id){
   eMalId=id;fillKS('m_kat');document.getElementById('m_ibox').style.display='none';document.getElementById('m_mgrp').style.display='none';resetI('M');
@@ -775,6 +761,15 @@ function openMalM(id){
   openM('mMal');
 }
 
+function saveMal(){
+  var katId=document.getElementById('m_kat').value;if(!katId){toast('Kategori seçiniz!','err');return;}
+  var kat=gK(katId);var id=eMalId||gid();
+  var data={kategoriId:katId,birim:document.getElementById('m_bir').value,stok:Number(document.getElementById('m_stok').value)||0,minstok:Number(document.getElementById('m_min').value)||0,raf:document.getElementById('m_raf').value.trim()};
+  if(kat&&kat.iskeleKat){var s=IST.M;if(!s.m||!s.t||!s.u){toast('Marka, tip ve uzunluk seçiniz!','err');return;}data.isk_m=s.m;data.isk_t=s.t;data.isk_u=s.u;data.urunAdi=s.m+' - '+s.u+' '+s.t;}
+  else{var mid2=document.getElementById('m_mar').value||null;if(kat&&kat.markaZorunlu&&!mid2){toast('Marka zorunludur!','err');return;}data.markaId=mid2||null;var mk=mid2?gMk(mid2):null;data.urunAdi=(kat?kat.ad:'?')+(mk?' / '+mk.ad:'');}
+  fbSet('malzemeler/'+id,data,function(){closeM('mMal');toast(eMalId?'Güncellendi.':'Eklendi.');});
+}
+function delMal(id){if(!confirm('Silmek istediğinizden emin misiniz?'))return;fbRm('malzemeler/'+id,function(){toast('Silindi.');});}
 
 function renderList(items,elId,tipRenk){
   var s=[].concat(items).sort(function(a,b){return b.tarih>a.tarih?1:-1;});
@@ -847,183 +842,170 @@ function renderKat(){
   document.getElementById('katList').innerHTML=html||'<div class="empty"><i class="ti ti-tags"></i><p>Kategori yok</p></div>';
 }
 function openMrkForKat(kid){openM('mMrk');setTimeout(function(){document.getElementById('mk_k').value=kid;},50);}
-async function saveKat(){
-  var ad=document.getElementById('k_ad').value.trim();
-  if(!ad){toast('Kategori adı zorunludur!','err');return;}
-  try{
-    await addDoc(collection(db,'kategoriler'),{ad:ad,markaZorunlu:document.getElementById('k_mz').checked,iskeleKat:document.getElementById('k_is').checked});
-    closeM('mKat');toast('Kategori eklendi.');
-    document.getElementById('k_ad').value='';document.getElementById('k_mz').checked=false;document.getElementById('k_is').checked=false;
-  }catch(e){toast('Hata!','err');console.error(e);}
-}
+function saveKat(){var ad=document.getElementById('k_ad').value.trim();if(!ad){toast('Kategori adı zorunludur!','err');return;}var id=gid();fbSet('kategoriler/'+id,{ad:ad,markaZorunlu:document.getElementById('k_mz').checked,iskeleKat:document.getElementById('k_is').checked},function(){closeM('mKat');toast('Kategori eklendi.');document.getElementById('k_ad').value='';document.getElementById('k_mz').checked=false;document.getElementById('k_is').checked=false;});}
+function delKat(id){for(var i=0;i<ldb.malzemeler.length;i++){if(ldb.malzemeler[i].kategoriId===id){toast('Bu kategoride malzeme var!','err');return;}}if(!confirm('Silmek istediğinizden emin misiniz?'))return;fbRm('kategoriler/'+id,function(){ldb.markalar.filter(function(m){return m.kategoriId===id;}).forEach(function(m){fbRm('markalar/'+m.id);});toast('Silindi.');});}
+function saveMrk(){var kid=document.getElementById('mk_k').value,ad=document.getElementById('mk_a').value.trim();if(!kid||!ad){toast('Kategori ve marka adı zorunludur!','err');return;}var id=gid();fbSet('markalar/'+id,{kategoriId:kid,ad:ad},function(){closeM('mMrk');toast('Marka eklendi.');document.getElementById('mk_a').value='';});}
 
-async function saveMrk(){
-  var kid=document.getElementById('mk_k').value,ad=document.getElementById('mk_a').value.trim();
-  if(!kid||!ad){toast('Kategori ve marka adı zorunludur!','err');return;}
-  try{
-    await addDoc(collection(db,'markalar'),{kategoriId:kid,ad:ad});
-    closeM('mMrk');toast('Marka eklendi.');document.getElementById('mk_a').value='';
-  }catch(e){toast('Hata!','err');console.error(e);}
-}
+// FIREBASE BAŞLAT
+var FIREBASE_CONFIG={apiKey:'AIzaSyDvqAAaNLp7vwQ7URbUSVSTzfEDFxB1mAU',authDomain:'gemtrack-fcabe.firebaseapp.com',databaseURL:'https://gemtrack-fcabe-default-rtdb.firebaseio.com',projectId:'gemtrack-fcabe'};
 
+firebase.initializeApp(FIREBASE_CONFIG);
+fdb=firebase.database();
+var fstore=firebase.firestore();
+
+var DKAT=[{id:'k1',ad:'İskele',markaZorunlu:true,iskeleKat:true},{id:'k2',ad:'Kaynak Makinesi',markaZorunlu:false,iskeleKat:false},{id:'k3',ad:'Eldiven',markaZorunlu:false,iskeleKat:false},{id:'k4',ad:'Taş Yünü',markaZorunlu:false,iskeleKat:false},{id:'k5',ad:'Matkap',markaZorunlu:false,iskeleKat:false}];
+var DMRK=[{id:'m1',kategoriId:'k1',ad:'Oğuzhan'},{id:'m2',kategoriId:'k1',ad:'Afix'},{id:'m3',kategoriId:'k1',ad:'Layer'}];
+
+fdb.ref('/').once('value',function(snap){
+  var d=snap.val()||{};
+  if(!d.kategoriler){var o={};DKAT.forEach(function(k){o[k.id]=k;});fdb.ref('kategoriler').set(o);}
+  else{// Mevcut kategorilere iskeleKat ekle
+    if(d.kategoriler&&d.kategoriler.k1&&!d.kategoriler.k1.iskeleKat){fdb.ref('kategoriler/k1/iskeleKat').set(true);}
+  }
+  if(!d.markalar){var o2={};DMRK.forEach(function(m){o2[m.id]=m;});fdb.ref('markalar').set(o2);}
+  startListeners();
+});
+
+function startListeners(){
+  setSdot('sy');
+  var tables=['kategoriler','markalar','malzemeler','girisler','cikislar','iadeler'];
+  tables.forEach(function(t){
+    fdb.ref(t).on('value',function(snap){ldb[t]=o2a(snap.val());setSdot('');refreshPg();},function(){setSdot('se');});
+  });
+}
 
 function refreshPg(){
   var a=document.querySelector('.pg.on');if(!a)return;
   var id=a.id.replace('pg-','');
-  if(id==='dash')renderDash();
-  else if(id==='mal')renderMal();
-  else if(id==='gir')renderGir();
-  else if(id==='cik')renderCik();
-  else if(id==='iad')renderIad();
-  else if(id==='har')renderHar();
+  if(id==='dash')renderDash();else if(id==='mal')renderMal();
+  else if(id==='gir')renderGir();else if(id==='cik')renderCik();
+  else if(id==='iad')renderIad();else if(id==='har')renderHar();
   else if(id==='uya')renderUya();
-  updDot();
 }
 
-async function initUsers(){
-  try{
-    const snap=await getDocs(collection(db,'users'));
-    const existing={};
-    snap.forEach(function(d){existing[d.id]=true;});
-    for(var i=0;i<DUSERS.length;i++){
-      var u=DUSERS[i];
+
+// ══════════════════════════════════════
+// KULLANICI SİSTEMİ - Firestore
+// ══════════════════════════════════════
+var DUSERS = [
+  {id:'u_admin',    adSoyad:'Admin',          kullaniciAdi:'admin',         sifre:'admin123',        rol:'admin',    aktif:true},
+  {id:'u_umit',     adSoyad:'Ümit Gürbüz',    kullaniciAdi:'umitgurbuz',    sifre:'umitgurbuz123',   rol:'personel', aktif:true},
+  {id:'u_mertcan',  adSoyad:'Mertcan Uca',    kullaniciAdi:'mertcanuca',    sifre:'mertcanuca123',   rol:'personel', aktif:true},
+  {id:'u_gorkem',   adSoyad:'Görkem Özer',    kullaniciAdi:'gorkemozer',    sifre:'gorkemozer123',   rol:'personel', aktif:true},
+  {id:'u_tolga',    adSoyad:'Tolga Yılmaz',   kullaniciAdi:'tolgayilmaz',   sifre:'tolgayilmaz123',  rol:'personel', aktif:true},
+  {id:'u_mehmet',   adSoyad:'Mehmet Uca',     kullaniciAdi:'mehmetuca',     sifre:'mehmetuca123',    rol:'personel', aktif:true},
+  {id:'u_isa',      adSoyad:'İsa Uca',        kullaniciAdi:'isauca',        sifre:'isauca123',       rol:'personel', aktif:true},
+  {id:'u_eflatun',  adSoyad:'Eflatun Uca',    kullaniciAdi:'eflatunuca',    sifre:'eflatunuca123',   rol:'personel', aktif:true},
+  {id:'u_cetin',    adSoyad:'Çetin Uca',      kullaniciAdi:'cetinuca',      sifre:'cetinuca123',     rol:'personel', aktif:true},
+  {id:'u_utku',     adSoyad:'Utku Belli',     kullaniciAdi:'utkubelli',     sifre:'utkubelli123',    rol:'personel', aktif:true},
+  {id:'u_samet',    adSoyad:'Samet Uca',      kullaniciAdi:'sametuca',      sifre:'sametuca123',     rol:'personel', aktif:true},
+  {id:'u_oruc',     adSoyad:'Oruç Egemen',    kullaniciAdi:'orucegemen',    sifre:'orucegemen123',   rol:'personel', aktif:true},
+  {id:'u_recep',    adSoyad:'Recep Özmen',    kullaniciAdi:'recepozmen',    sifre:'recepozmen123',   rol:'personel', aktif:true},
+  {id:'u_hilmi',    adSoyad:'Hilmi Demirel',  kullaniciAdi:'hilmidemirel',  sifre:'hilmidemirel123', rol:'personel', aktif:true},
+  {id:'u_arda',     adSoyad:'Arda Uca',       kullaniciAdi:'aradauca',      sifre:'aradauca123',     rol:'personel', aktif:true},
+  {id:'u_muhammet', adSoyad:'Muhammet Uca',   kullaniciAdi:'muhammetuca',   sifre:'muhammetuca123',  rol:'personel', aktif:true},
+  {id:'u_cetins',   adSoyad:'Çetin Salgar',   kullaniciAdi:'cetinsalgar',   sifre:'cetinsalgar123',  rol:'personel', aktif:true},
+  {id:'u_erkan',    adSoyad:'Erkan Ertuğrul', kullaniciAdi:'erkanertugrul', sifre:'erkanertugrul123',rol:'personel', aktif:true},
+  {id:'u_bulent',   adSoyad:'Bülent Uca',     kullaniciAdi:'bulentuca',     sifre:'bulentuca123',    rol:'personel', aktif:true},
+  {id:'u_gencay',   adSoyad:'Gencay Uca',     kullaniciAdi:'gencayuca',     sifre:'gencayuca123',    rol:'personel', aktif:true}
+];
+
+var cu = null; // giriş yapan kullanıcı
+
+// İlk açılışta users koleksiyonunu Firestore'a yaz (yoksa)
+function initUsers(cb){
+  fstore.collection('users').get().then(function(snap){
+    var existing = {};
+    snap.forEach(function(d){ existing[d.id] = true; });
+    var batch = fstore.batch();
+    var added = 0;
+    DUSERS.forEach(function(u){
       if(!existing[u.id]){
-        await setDoc(doc(db,'users',u.id),{
-          adSoyad:u.adSoyad,kullaniciAdi:u.kullaniciAdi,sifre:u.sifre,
-          rol:u.rol,aktif:u.aktif,createdAt:serverTimestamp()
+        batch.set(fstore.collection('users').doc(u.id), {
+          adSoyad: u.adSoyad,
+          kullaniciAdi: u.kullaniciAdi,
+          sifre: u.sifre,
+          rol: u.rol,
+          aktif: u.aktif
         });
+        added++;
       }
-    }
-    const snap2=await getDocs(collection(db,'users'));
-    ldbUsers=[];
-    snap2.forEach(function(d){var v=d.data();v.id=d.id;ldbUsers.push(v);});
-  }catch(e){console.error('initUsers hata:',e);ldbUsers=DUSERS.slice();}
-}
-
-async function startApp(){
-  setSdot('sy');
-  try{
-    var cols=['malzemeler','girisler','cikislar','iadeler','kategoriler','markalar'];
-    for(var i=0;i<cols.length;i++){
-      var snap=await getDocs(collection(db,cols[i]));
-      ldb[cols[i]]=[];
-      snap.forEach(function(d){var v=d.data();v.id=d.id;ldb[cols[i]].push(v);});
-    }
-    setSdot('');
-    startListeners();
-    renderDash();
-  }catch(e){setSdot('se');console.error('startApp hata:',e);}
-}
-
-function startListeners(){
-  ['malzemeler','girisler','cikislar','iadeler'].forEach(function(t){
-    onSnapshot(collection(db,t),function(snap){
-      ldb[t]=[];
-      snap.forEach(function(d){var v=d.data();v.id=d.id;ldb[t].push(v);});
-      setSdot('');refreshPg();
     });
+    if(added > 0){
+      batch.commit().then(function(){ if(cb)cb(); }).catch(function(){ if(cb)cb(); });
+    } else {
+      if(cb)cb();
+    }
+  }).catch(function(e){
+    console.warn('[GEMTrack] initUsers hata (offline?):', e);
+    if(cb)cb();
   });
 }
 
-async function doLogin(){
-  var kadi=document.getElementById('loginKadi').value.trim().toLowerCase();
-  var sifre=document.getElementById('loginSifre').value;
-  var eEl=document.getElementById('loginErr');
-  var eMsg=document.getElementById('loginErrMsg');
-  function showErr(m){eMsg.textContent=m;eEl.style.display='flex';}
+function doLogin(){
+  var kadi = document.getElementById('loginKadi').value.trim().toLowerCase();
+  var sifre = document.getElementById('loginSifre').value;
+  var eEl = document.getElementById('loginErr');
+  var eMsg = document.getElementById('loginErrMsg');
+  function showErr(m){ eMsg.textContent=m; eEl.style.display='flex'; }
   eEl.style.display='none';
-  if(!kadi||!sifre){showErr('Kullanıcı adı ve şifre giriniz!');return;}
-  var btn=document.querySelector('#loginScreen button[onclick]');
-  if(btn){btn.disabled=true;btn.textContent='Kontrol ediliyor...';}
-  try{
-    const q=query(collection(db,'users'),where('kullaniciAdi','==',kadi));
-    const snap=await getDocs(q);
+  if(!kadi||!sifre){ showErr('Kullanıcı adı ve şifre giriniz!'); return; }
+
+  var btn = document.querySelector('#loginScreen button');
+  if(btn){ btn.disabled=true; btn.textContent='Kontrol ediliyor...'; }
+
+  fstore.collection('users').where('kullaniciAdi','==',kadi).get().then(function(snap){
     if(snap.empty){
       showErr('Kullanıcı bulunamadı');
-      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
+      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
       return;
     }
-    var userData=snap.docs[0].data();userData.id=snap.docs[0].id;
+    var userData = snap.docs[0].data();
+    userData.id = snap.docs[0].id;
     if(!userData.aktif){
       showErr('Kullanıcı pasif. Yönetici ile iletişime geçin.');
-      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
+      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
       return;
     }
-    if(userData.sifre!==sifre){
+    if(userData.sifre !== sifre){
       showErr('Şifre hatalı');
-      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
+      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
       return;
     }
-    cu=userData;
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('app').style.display='flex';
-    applyRoleUI();
-    await startApp();
-    toast('Hoş geldiniz, '+cu.adSoyad+'!');
-    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
-  }catch(e){
-    console.error('Login hata:',e);
-    showErr('Firestore bağlantı hatası. Lütfen tekrar deneyin.');
-    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
-  }
+    // Giriş başarılı
+    cu = userData;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    nav('dash');
+    toast('Hoş geldiniz, ' + cu.adSoyad + '!');
+    if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+  }).catch(function(e){
+    console.error('Login hata:', e);
+    showErr('Bağlantı hatası. Lütfen tekrar deneyin.');
+    if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+  });
 }
 
 function doLogout(){
-  cu=null;
-  document.getElementById('app').style.display='none';
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('loginKadi').value='';
-  document.getElementById('loginSifre').value='';
+  cu = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginKadi').value = '';
+  document.getElementById('loginSifre').value = '';
+  document.getElementById('loginErr').style.display = 'none';
 }
 
-function applyRoleUI(){
-  var isAdm=cu&&cu.rol==='admin';
-  document.querySelectorAll('.admin-only').forEach(function(el){el.style.display=isAdm?'':'none';});
-  var uEl=document.getElementById('hdrUser');
-  if(uEl)uEl.textContent=cu?cu.adSoyad:'';
-}
-
-function isAdmin(){return !!(cu&&cu.rol==='admin');}
-
-// ES Module -> global
-window.doLogin=doLogin;
-window.doLogout=doLogout;
-window.nav=nav;
-window.openM=openM;
-window.closeM=closeM;
-window.openSB=openSB;
-window.closeSB=closeSB;
-window.setTip=setTip;
-window.pickI=pickI;
-window.pickMal=pickMal;
-window.saveGiris=saveGiris;
-window.saveCikis=saveCikis;
-window.saveIade=saveIade;
-window.saveMal=saveMal;
-window.delMal=delMal;
-window.openMalM=openMalM;
-window.qkG=qkG;
-window.qkC=qkC;
-window.saveKat=saveKat;
-window.delKat=delKat;
-window.saveMrk=saveMrk;
-window.openMrkForKat=openMrkForKat;
-window.expXL=expXL;
-window.genPDF=genPDF;
-
-document.addEventListener('DOMContentLoaded',async function(){
-  var lp=document.getElementById('loginSifre');
-  if(lp)lp.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-  var lk=document.getElementById('loginKadi');
-  if(lk)lk.addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginSifre').focus();});
-  try{ await initUsers(); }catch(e){ console.error(e); }
+// Şifre alanında Enter → giriş
+document.addEventListener('DOMContentLoaded', function(){
+  var lp = document.getElementById('loginSifre');
+  if(lp) lp.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  var lk = document.getElementById('loginKadi');
+  if(lk) lk.addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginSifre').focus(); });
+  // Kullanıcıları Firestore'a yükle (arka planda)
+  initUsers(function(){ console.log('[GEMTrack] Users ready.'); });
 });
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('./sw.js').catch(function(){});
-  });
-}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
 </script>
 </body>
 </html>
