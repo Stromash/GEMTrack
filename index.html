@@ -557,7 +557,7 @@ function nav(name){
   BNS.forEach(function(b){var el=document.getElementById('bn-'+b);if(el){if(b===name)el.classList.add('on');else el.classList.remove('on');}});
   document.querySelectorAll('.sbit').forEach(function(s){s.classList.remove('on');});
   var si=document.getElementById('si-'+name);if(si)si.classList.add('on');
-  document.getElementById('hdrT').textContent=TITLES[name]||name;
+  document.getElementById('hdrT').textContent = cu ? cu.adSoyad : (TITLES[name]||name);
   if(name==='dash')renderDash();else if(name==='mal')renderMal();
   else if(name==='gir')renderGir();else if(name==='cik')renderCik();
   else if(name==='iad')renderIad();else if(name==='har')renderHar();
@@ -978,6 +978,7 @@ function doLogin(){
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     nav('dash');
+    document.getElementById('hdrT').textContent = cu.adSoyad;
     toast('Hoş geldiniz, ' + cu.adSoyad + '!');
     if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
   }).catch(function(e){
