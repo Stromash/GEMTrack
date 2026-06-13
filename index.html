@@ -133,8 +133,6 @@ textarea.fc{resize:none;min-height:80px;font-size:14px}
 </style>
 </head>
 <body>
-
-<!-- GİRİŞ EKRANI -->
 <div id="loginScreen" style="position:fixed;inset:0;background:linear-gradient(150deg,#0D2B4E,#1a3d6e);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px">
   <div style="background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="text-align:center;margin-bottom:22px">
@@ -557,7 +555,7 @@ function nav(name){
   BNS.forEach(function(b){var el=document.getElementById('bn-'+b);if(el){if(b===name)el.classList.add('on');else el.classList.remove('on');}});
   document.querySelectorAll('.sbit').forEach(function(s){s.classList.remove('on');});
   var si=document.getElementById('si-'+name);if(si)si.classList.add('on');
-  document.getElementById('hdrT').textContent = cu ? cu.adSoyad : (TITLES[name]||name);
+  document.getElementById('hdrT').textContent=cu?cu.adSoyad:(TITLES[name]||name);
   if(name==='dash')renderDash();else if(name==='mal')renderMal();
   else if(name==='gir')renderGir();else if(name==='cik')renderCik();
   else if(name==='iad')renderIad();else if(name==='har')renderHar();
@@ -721,11 +719,11 @@ function renderDash(){
   var all=[];
   ldb.girisler.forEach(function(g){all.push({id:g.id,tarih:g.tarih,adi:g.urunAdi||'-',mik:g.miktar,tip:'giris',ac:g.aciklama});});
   ldb.cikislar.forEach(function(c){all.push({id:c.id,tarih:c.tarih,adi:c.urunAdi||'-',mik:c.miktar,tip:'cikis',ac:c.aciklama});});
-  (ldb.iadeler||[]).forEach(function(i){all.push({id:i.id,tarih:i.tarih,adi:i.urunAdi||'-',mik:i.miktar,tip:'iade',ac:i.aciklama});});
+  (ldb.iadeler||[]).forEach(function(i){all.push({tarih:i.tarih,adi:i.urunAdi||'-',mik:i.miktar,tip:'iade',ac:i.aciklama});});
   all.sort(function(a,b){return b.tarih>a.tarih?1:-1;});all=all.slice(0,8);
   var col={giris:'bxg',cikis:'bxr',iade:'bxp'};var sgn={giris:'+',cikis:'-',iade:'↩'};
   var html='';
-  for(var i=0;i<all.length;i++){var h=all[i];var delBtn=isAdmin()&&h.id?'<button onclick="delHareket(''+h.tip+'',''+h.id+'')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:16px;padding:4px;flex-shrink:0;line-height:1" title="Sil"><i class="ti ti-trash"></i></button>':'';html+='<div class="ic" style="padding:10px 13px;margin-bottom:7px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div style="font-size:13px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(h.adi)+'</div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span class="bx '+(col[h.tip]||'bxgr')+'">'+sgn[h.tip]+h.mik+'</span>'+delBtn+'</div></div>'+(h.ac?'<div style="font-size:11px;color:var(--mu);margin-top:3px"><i class="ti ti-map-pin" style="font-size:11px"></i> '+esc(h.ac)+'</div>':'')+'</div>';}
+  for(var i=0;i<all.length;i++){var h=all[i];var db2=isAdmin()&&h.id?'<button onclick="delHareket(''+h.tip+'',''+h.id+'')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:16px;padding:2px 4px;flex-shrink:0"><i class="ti ti-trash"></i></button>':'';html+='<div class="ic" style="padding:10px 13px;margin-bottom:7px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div style="font-size:13px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(h.adi)+'</div><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span class="bx '+(col[h.tip]||'bxgr')+'">'+sgn[h.tip]+h.mik+'</span>'+db2+'</div></div>'+(h.ac?'<div style="font-size:11px;color:var(--mu);margin-top:3px"><i class="ti ti-map-pin" style="font-size:11px"></i> '+esc(h.ac)+'</div>':'')+'</div>';}
   if(!all.length)html='<div class="empty"><i class="ti ti-inbox"></i><p>Henüz hareket yok</p></div>';
   document.getElementById('dHar').innerHTML=html;
   var uh='';
@@ -791,7 +789,7 @@ function renderHar(){
   list.sort(function(a,b){return b.tarih>a.tarih?1:-1;});
   var col={giris:'bxg',cikis:'bxr',iade:'bxp'};var lbl={giris:'Giriş',cikis:'Çıkış',iade:'İade'};var sgn={giris:'+',cikis:'-',iade:'↩'};
   var html='';
-  for(var i=0;i<list.length;i++){var h=list[i];var hDelBtn=isAdmin()&&h.id?'<button onclick="delHareket(''+h.tip+'',''+h.id+'')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:17px;padding:4px;flex-shrink:0;line-height:1" title="Sil"><i class="ti ti-trash"></i></button>':'';html+='<div class="ic"><div class="ich"><div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0"><span class="bx '+(col[h.tip]||'bxgr')+'">'+esc(lbl[h.tip]||h.tip)+'</span><span style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(h.adi)+'</span></div><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span style="font-size:14px;font-weight:800;color:'+(h.tip==='cikis'?'var(--er)':'var(--ok)')+'">'+sgn[h.tip]+h.mik+'</span>'+hDelBtn+'</div></div><div class="icm"><span><i class="ti ti-calendar" style="font-size:12px"></i>'+dd(h.tarih)+'</span></div>'+(h.ac?'<div style="font-size:12px;color:var(--mu);background:#f8fafc;padding:6px 10px;border-radius:7px"><i class="ti ti-map-pin" style="font-size:12px"></i> '+esc(h.ac)+'</div>':'')+'</div>';}
+  for(var i=0;i<list.length;i++){var h=list[i];var hd=isAdmin()&&h.id?'<button onclick="delHareket(''+h.tip+'',''+h.id+'')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:16px;padding:2px 4px;flex-shrink:0"><i class="ti ti-trash"></i></button>':'';html+='<div class="ic"><div class="ich"><div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0"><span class="bx '+(col[h.tip]||'bxgr')+'">'+esc(lbl[h.tip]||h.tip)+'</span><span style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(h.adi)+'</span></div><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span style="font-size:14px;font-weight:800;color:'+(h.tip==='cikis'?'var(--er)':'var(--ok)')+'">'+sgn[h.tip]+h.mik+'</span>'+hd+'</div></div><div class="icm"><span><i class="ti ti-calendar" style="font-size:12px"></i>'+dd(h.tarih)+'</span></div>'+(h.ac?'<div style="font-size:12px;color:var(--mu);background:#f8fafc;padding:6px 10px;border-radius:7px"><i class="ti ti-map-pin" style="font-size:12px"></i> '+esc(h.ac)+'</div>':'')+'</div>';}
   document.getElementById('harList').innerHTML=html||'<div class="empty"><i class="ti ti-history"></i><p>Kayıt yok</p></div>';
 }
 
@@ -884,139 +882,100 @@ function refreshPg(){
 }
 
 
-// ══════════════════════════════════════
-// KULLANICI SİSTEMİ - Firestore
-// ══════════════════════════════════════
-var DUSERS = [
-  {id:'u_admin',    adSoyad:'Admin',          kullaniciAdi:'admin',         sifre:'admin123',        rol:'admin',    aktif:true},
-  {id:'u_umit',     adSoyad:'Ümit Gürbüz',    kullaniciAdi:'umitgurbuz',    sifre:'umitgurbuz123',   rol:'personel', aktif:true},
-  {id:'u_mertcan',  adSoyad:'Mertcan Uca',    kullaniciAdi:'mertcanuca',    sifre:'mertcanuca123',   rol:'personel', aktif:true},
-  {id:'u_gorkem',   adSoyad:'Görkem Özer',    kullaniciAdi:'gorkemozer',    sifre:'gorkemozer123',   rol:'personel', aktif:true},
-  {id:'u_tolga',    adSoyad:'Tolga Yılmaz',   kullaniciAdi:'tolgayilmaz',   sifre:'tolgayilmaz123',  rol:'personel', aktif:true},
-  {id:'u_mehmet',   adSoyad:'Mehmet Uca',     kullaniciAdi:'mehmetuca',     sifre:'mehmetuca123',    rol:'personel', aktif:true},
-  {id:'u_isa',      adSoyad:'İsa Uca',        kullaniciAdi:'isauca',        sifre:'isauca123',       rol:'personel', aktif:true},
-  {id:'u_eflatun',  adSoyad:'Eflatun Uca',    kullaniciAdi:'eflatunuca',    sifre:'eflatunuca123',   rol:'personel', aktif:true},
-  {id:'u_cetin',    adSoyad:'Çetin Uca',      kullaniciAdi:'cetinuca',      sifre:'cetinuca123',     rol:'personel', aktif:true},
-  {id:'u_utku',     adSoyad:'Utku Belli',     kullaniciAdi:'utkubelli',     sifre:'utkubelli123',    rol:'personel', aktif:true},
-  {id:'u_samet',    adSoyad:'Samet Uca',      kullaniciAdi:'sametuca',      sifre:'sametuca123',     rol:'personel', aktif:true},
-  {id:'u_oruc',     adSoyad:'Oruç Egemen',    kullaniciAdi:'orucegemen',    sifre:'orucegemen123',   rol:'personel', aktif:true},
-  {id:'u_recep',    adSoyad:'Recep Özmen',    kullaniciAdi:'recepozmen',    sifre:'recepozmen123',   rol:'personel', aktif:true},
-  {id:'u_hilmi',    adSoyad:'Hilmi Demirel',  kullaniciAdi:'hilmidemirel',  sifre:'hilmidemirel123', rol:'personel', aktif:true},
-  {id:'u_arda',     adSoyad:'Arda Uca',       kullaniciAdi:'aradauca',      sifre:'aradauca123',     rol:'personel', aktif:true},
-  {id:'u_muhammet', adSoyad:'Muhammet Uca',   kullaniciAdi:'muhammetuca',   sifre:'muhammetuca123',  rol:'personel', aktif:true},
-  {id:'u_cetins',   adSoyad:'Çetin Salgar',   kullaniciAdi:'cetinsalgar',   sifre:'cetinsalgar123',  rol:'personel', aktif:true},
-  {id:'u_erkan',    adSoyad:'Erkan Ertuğrul', kullaniciAdi:'erkanertugrul', sifre:'erkanertugrul123',rol:'personel', aktif:true},
-  {id:'u_bulent',   adSoyad:'Bülent Uca',     kullaniciAdi:'bulentuca',     sifre:'bulentuca123',    rol:'personel', aktif:true},
-  {id:'u_gencay',   adSoyad:'Gencay Uca',     kullaniciAdi:'gencayuca',     sifre:'gencayuca123',    rol:'personel', aktif:true},
-  {id:'u_rauf',     adSoyad:'Rauf Dilbaz',    kullaniciAdi:'raufdilbaz',    sifre:'raufdilbaz123',   rol:'personel', aktif:true}
+var DUSERS=[
+  {id:'u_admin',adSoyad:'Admin',kullaniciAdi:'admin',sifre:'admin123',rol:'admin',aktif:true},
+  {id:'u_umit',adSoyad:'Ümit Gürbüz',kullaniciAdi:'umitgurbuz',sifre:'umitgurbuz123',rol:'personel',aktif:true},
+  {id:'u_mertcan',adSoyad:'Mertcan Uca',kullaniciAdi:'mertcanuca',sifre:'mertcanuca123',rol:'personel',aktif:true},
+  {id:'u_gorkem',adSoyad:'Görkem Özer',kullaniciAdi:'gorkemozer',sifre:'gorkemozer123',rol:'personel',aktif:true},
+  {id:'u_tolga',adSoyad:'Tolga Yılmaz',kullaniciAdi:'tolgayilmaz',sifre:'tolgayilmaz123',rol:'personel',aktif:true},
+  {id:'u_mehmet',adSoyad:'Mehmet Uca',kullaniciAdi:'mehmetuca',sifre:'mehmetuca123',rol:'personel',aktif:true},
+  {id:'u_isa',adSoyad:'İsa Uca',kullaniciAdi:'isauca',sifre:'isauca123',rol:'personel',aktif:true},
+  {id:'u_eflatun',adSoyad:'Eflatun Uca',kullaniciAdi:'eflatunuca',sifre:'eflatunuca123',rol:'personel',aktif:true},
+  {id:'u_cetin',adSoyad:'Çetin Uca',kullaniciAdi:'cetinuca',sifre:'cetinuca123',rol:'personel',aktif:true},
+  {id:'u_utku',adSoyad:'Utku Belli',kullaniciAdi:'utkubelli',sifre:'utkubelli123',rol:'personel',aktif:true},
+  {id:'u_samet',adSoyad:'Samet Uca',kullaniciAdi:'sametuca',sifre:'sametuca123',rol:'personel',aktif:true},
+  {id:'u_oruc',adSoyad:'Oruç Egemen',kullaniciAdi:'orucegemen',sifre:'orucegemen123',rol:'personel',aktif:true},
+  {id:'u_recep',adSoyad:'Recep Özmen',kullaniciAdi:'recepozmen',sifre:'recepozmen123',rol:'personel',aktif:true},
+  {id:'u_hilmi',adSoyad:'Hilmi Demirel',kullaniciAdi:'hilmidemirel',sifre:'hilmidemirel123',rol:'personel',aktif:true},
+  {id:'u_arda',adSoyad:'Arda Uca',kullaniciAdi:'aradauca',sifre:'aradauca123',rol:'personel',aktif:true},
+  {id:'u_muhammet',adSoyad:'Muhammet Uca',kullaniciAdi:'muhammetuca',sifre:'muhammetuca123',rol:'personel',aktif:true},
+  {id:'u_cetins',adSoyad:'Çetin Salgar',kullaniciAdi:'cetinsalgar',sifre:'cetinsalgar123',rol:'personel',aktif:true},
+  {id:'u_erkan',adSoyad:'Erkan Ertuğrul',kullaniciAdi:'erkanertugrul',sifre:'erkanertugrul123',rol:'personel',aktif:true},
+  {id:'u_bulent',adSoyad:'Bülent Uca',kullaniciAdi:'bulentuca',sifre:'bulentuca123',rol:'personel',aktif:true},
+  {id:'u_gencay',adSoyad:'Gencay Uca',kullaniciAdi:'gencayuca',sifre:'gencayuca123',rol:'personel',aktif:true},
+  {id:'u_rauf',adSoyad:'Rauf Dilbaz',kullaniciAdi:'raufdilbaz',sifre:'raufdilbaz123',rol:'personel',aktif:true}
 ];
+var cu=null;
 
-var cu = null; // giriş yapan kullanıcı
-
-// İlk açılışta users koleksiyonunu Firestore'a yaz (yoksa)
-function initUsers(cb){
+function initUsers(){
   fstore.collection('users').get().then(function(snap){
-    var existing = {};
-    snap.forEach(function(d){ existing[d.id] = true; });
-    var batch = fstore.batch();
-    var added = 0;
+    var ex={};snap.forEach(function(d){ex[d.id]=true;});
+    var batch=fstore.batch();var n=0;
     DUSERS.forEach(function(u){
-      if(!existing[u.id]){
-        batch.set(fstore.collection('users').doc(u.id), {
-          adSoyad: u.adSoyad,
-          kullaniciAdi: u.kullaniciAdi,
-          sifre: u.sifre,
-          rol: u.rol,
-          aktif: u.aktif
-        });
-        added++;
+      if(!ex[u.id]){
+        batch.set(fstore.collection('users').doc(u.id),{adSoyad:u.adSoyad,kullaniciAdi:u.kullaniciAdi,sifre:u.sifre,rol:u.rol,aktif:u.aktif});
+        n++;
       }
     });
-    if(added > 0){
-      batch.commit().then(function(){ if(cb)cb(); }).catch(function(){ if(cb)cb(); });
-    } else {
-      if(cb)cb();
-    }
-  }).catch(function(e){
-    console.warn('[GEMTrack] initUsers hata (offline?):', e);
-    if(cb)cb();
-  });
+    if(n>0)batch.commit().catch(function(){});
+  }).catch(function(){});
 }
 
 function doLogin(){
-  var kadi = document.getElementById('loginKadi').value.trim().toLowerCase();
-  var sifre = document.getElementById('loginSifre').value;
-  var eEl = document.getElementById('loginErr');
-  var eMsg = document.getElementById('loginErrMsg');
-  function showErr(m){ eMsg.textContent=m; eEl.style.display='flex'; }
+  var kadi=document.getElementById('loginKadi').value.trim().toLowerCase();
+  var sifre=document.getElementById('loginSifre').value;
+  var eEl=document.getElementById('loginErr');var eMsg=document.getElementById('loginErrMsg');
+  function showErr(m){eMsg.textContent=m;eEl.style.display='flex';}
   eEl.style.display='none';
-  if(!kadi||!sifre){ showErr('Kullanıcı adı ve şifre giriniz!'); return; }
-
-  var btn = document.querySelector('#loginScreen button');
-  if(btn){ btn.disabled=true; btn.textContent='Kontrol ediliyor...'; }
-
+  if(!kadi||!sifre){showErr('Kullanıcı adı ve şifre giriniz!');return;}
+  var btn=document.querySelector('#loginScreen button');
+  if(btn){btn.disabled=true;btn.textContent='Kontrol ediliyor...';}
   fstore.collection('users').where('kullaniciAdi','==',kadi).get().then(function(snap){
-    if(snap.empty){
-      showErr('Kullanıcı bulunamadı');
-      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
-      return;
-    }
-    var userData = snap.docs[0].data();
-    userData.id = snap.docs[0].id;
-    if(!userData.aktif){
-      showErr('Kullanıcı pasif. Yönetici ile iletişime geçin.');
-      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
-      return;
-    }
-    if(userData.sifre !== sifre){
-      showErr('Şifre hatalı');
-      if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
-      return;
-    }
-    // Giriş başarılı
-    cu = userData;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
+    if(snap.empty){showErr('Kullanıcı bulunamadı');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}return;}
+    var u=snap.docs[0].data();u.id=snap.docs[0].id;
+    if(!u.aktif){showErr('Kullanıcı pasif');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}return;}
+    if(u.sifre!==sifre){showErr('Şifre hatalı');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}return;}
+    cu=u;
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('hdrT').textContent=cu.adSoyad;
     nav('dash');
-    document.getElementById('hdrT').textContent = cu.adSoyad;
-    toast('Hoş geldiniz, ' + cu.adSoyad + '!');
-    if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+    toast('Hoş geldiniz, '+cu.adSoyad+'!');
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
   }).catch(function(e){
-    console.error('Login hata:', e);
-    showErr('Bağlantı hatası. Lütfen tekrar deneyin.');
-    if(btn){ btn.disabled=false; btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap'; }
+    showErr('Bağlantı hatası. Tekrar deneyin.');
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Giriş Yap';}
   });
 }
 
 function doLogout(){
-  cu = null;
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginKadi').value = '';
-  document.getElementById('loginSifre').value = '';
-  document.getElementById('loginErr').style.display = 'none';
+  cu=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginKadi').value='';
+  document.getElementById('loginSifre').value='';
+  document.getElementById('loginErr').style.display='none';
 }
 
-// Şifre alanında Enter → giriş
-document.addEventListener('DOMContentLoaded', function(){
-  var lp = document.getElementById('loginSifre');
-  if(lp) lp.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  var lk = document.getElementById('loginKadi');
-  if(lk) lk.addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginSifre').focus(); });
-  // Kullanıcıları Firestore'a yükle (arka planda)
-  initUsers(function(){ console.log('[GEMTrack] Users ready.'); });
-});
+function isAdmin(){return !!(cu&&cu.rol==='admin');}
 
-
-function delHareket(tip, id){
-  if(!isAdmin()){ toast('Yetkiniz yok!','err'); return; }
-  if(!confirm('Bu kaydı silmek istediğinizden emin misiniz?')) return;
-  var col = tip==='giris'?'girisler': tip==='cikis'?'cikislar':'iadeler';
+function delHareket(tip,id){
+  if(!isAdmin()){toast('Yetkiniz yok!','err');return;}
+  if(!confirm('Bu kaydı silmek istediğinizden emin misiniz?'))return;
+  var col=tip==='giris'?'girisler':tip==='cikis'?'cikislar':'iadeler';
   fdb.ref(col+'/'+id).remove(function(e){
-    if(e){ toast('Silme hatası!','err'); }
-    else { toast('Kayıt silindi.'); }
+    if(e)toast('Silme hatası!','err');
+    else toast('Kayıt silindi.');
   });
 }
+
+document.addEventListener('DOMContentLoaded',function(){
+  var lp=document.getElementById('loginSifre');
+  if(lp)lp.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+  var lk=document.getElementById('loginKadi');
+  if(lk)lk.addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginSifre').focus();});
+  initUsers();
+});
 
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
 </script>
